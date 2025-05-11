@@ -2,7 +2,8 @@
 Twin Share - Environment Manager
 """
 
-# Import submodules to make them available when importing src
-from . import api, cli, core, p2p, runtime, sharing, utils, web
+# Version information
+__version__ = "0.1.17"
 
-__version__ = "0.1.3"
+# Note: We avoid importing modules here to prevent circular imports
+# Modules will be imported as needed by the application

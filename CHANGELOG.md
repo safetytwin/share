@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.19] - 2025-05-11
+
+### Added
+- Changes in bin/twinshare
+- Changes in install_package.sh
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/__init__.py
+
 ## [0.1.18] - 2025-05-11
 
 ### Added

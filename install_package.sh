@@ -1,42 +1,30 @@
 #!/bin/bash
-# Installation script for twinshare package
-# This script ensures the package is properly installed with the CLI command available
 
 # Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Print colored message
+# Function to print messages
 print_message() {
-    echo -e "${GREEN}[twinshare]${NC} $1"
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 print_warning() {
-    echo -e "${YELLOW}[Warning]${NC} $1"
+    echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 print_error() {
-    echo -e "${RED}[Error]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running as root
-if [ "$EUID" -eq 0 ]; then
-    print_warning "Running as root. It's recommended to install as a regular user with sudo privileges."
-    read -p "Continue as root? (y/n) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_message "Exiting."
-        exit 1
-    fi
-fi
-
-# Get the project directory
-PROJECT_DIR=$(pwd)
-print_message "Project directory: $PROJECT_DIR"
-
-# Check if Python 3 is installed
+# Check if Python is installed
 if ! command -v python3 &> /dev/null; then
     print_error "Python 3 is not installed. Please install Python 3 and try again."
     exit 1
@@ -44,112 +32,122 @@ fi
 
 # Check if pip is installed
 if ! command -v pip3 &> /dev/null; then
-    print_warning "pip3 is not installed. Attempting to install..."
-    if [ "$EUID" -eq 0 ]; then
-        apt-get update && apt-get install -y python3-pip
-    else
-        sudo apt-get update && sudo apt-get install -y python3-pip
-    fi
-    
-    if ! command -v pip3 &> /dev/null; then
-        print_error "Failed to install pip3. Please install it manually and try again."
+    print_warning "pip3 is not installed. Attempting to install pip..."
+    python3 -m ensurepip --upgrade || {
+        print_error "Failed to install pip. Please install pip manually and try again."
         exit 1
-    fi
+    }
 fi
 
-# Check if virtual environment is needed
-read -p "Install in a virtual environment? (recommended) (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    # Check if virtualenv is installed
-    if ! command -v virtualenv &> /dev/null; then
-        print_warning "virtualenv is not installed. Attempting to install..."
-        pip3 install virtualenv
-        
-        if ! command -v virtualenv &> /dev/null; then
-            print_error "Failed to install virtualenv. Please install it manually and try again."
-            exit 1
-        fi
-    fi
-    
-    # Create virtual environment
-    print_message "Creating virtual environment..."
-    if [ -d "venv" ]; then
-        print_warning "Virtual environment already exists. Using existing environment."
-    else
-        virtualenv venv
-    fi
-    
-    # Activate virtual environment
-    print_message "Activating virtual environment..."
-    source venv/bin/activate
-    
-    # Install package in development mode
-    print_message "Installing package in development mode..."
-    pip install -e .
-    
-    # Explicitly install all required dependencies
-    print_message "Installing required dependencies..."
-    pip install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces
-    
-    # Create symlink to the CLI script
-    print_message "Creating symlink to the CLI script..."
-    if [ -f "venv/bin/twinshare" ]; then
-        print_warning "Symlink already exists."
-    else
-        ln -s "$PROJECT_DIR/bin/twinshare" "venv/bin/twinshare"
-        chmod +x "venv/bin/twinshare"
-    fi
-    
-    print_message "Installation complete!"
-    print_message "To use the twinshare command, activate the virtual environment:"
-    print_message "  source venv/bin/activate"
-    print_message "Then run:"
-    print_message "  twinshare --help"
+# Get the absolute path to the project directory
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$PROJECT_DIR" || {
+    print_error "Failed to change to project directory."
+    exit 1
+}
+
+print_message "Installing twinshare package..."
+
+# Create a dedicated virtual environment for twinshare
+VENV_DIR="${HOME}/.twinshare_venv"
+print_message "Creating virtual environment at ${VENV_DIR}..."
+
+# Check if virtual environment already exists
+if [ -d "$VENV_DIR" ]; then
+    print_warning "Virtual environment already exists. Updating it..."
 else
-    # Install package system-wide
-    print_message "Installing package system-wide..."
-    if [ "$EUID" -eq 0 ]; then
-        pip3 install -e .
-    else
-        sudo pip3 install -e .
+    python3 -m venv "$VENV_DIR" || {
+        print_error "Failed to create virtual environment. Please install python3-venv package and try again."
+        exit 1
+    }
+    print_success "Virtual environment created successfully."
+fi
+
+# Activate the virtual environment
+print_message "Activating virtual environment..."
+source "${VENV_DIR}/bin/activate" || {
+    print_error "Failed to activate virtual environment."
+    exit 1
+}
+
+# Upgrade pip in the virtual environment
+print_message "Upgrading pip..."
+pip install --upgrade pip
+
+# Install the package in development mode
+print_message "Installing package in development mode..."
+pip install -e .
+
+# Explicitly install all required dependencies
+print_message "Installing required dependencies..."
+pip install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces zeroconf
+
+# Create the bin directory in the user's home if it doesn't exist
+USER_BIN_DIR="${HOME}/.local/bin"
+mkdir -p "$USER_BIN_DIR"
+
+# Create a wrapper script that activates the virtual environment and runs twinshare
+WRAPPER_SCRIPT="${USER_BIN_DIR}/twinshare"
+print_message "Creating wrapper script at ${WRAPPER_SCRIPT}..."
+
+# Store the absolute path to the package directory
+ABSOLUTE_PACKAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+cat > "$WRAPPER_SCRIPT" << EOF
+#!/bin/bash
+VENV_DIR="\${HOME}/.twinshare_venv"
+PACKAGE_DIR="$ABSOLUTE_PACKAGE_DIR"
+
+if [ -d "\$VENV_DIR" ]; then
+    source "\${VENV_DIR}/bin/activate"
+    
+    # Run the CLI module directly to avoid circular imports
+    PYTHONPATH="\${PACKAGE_DIR}:\${PYTHONPATH}" python -c "import sys; sys.path.insert(0, '\${PACKAGE_DIR}'); from src.cli.main import main; sys.exit(main())" "\$@"
+else
+    echo "Error: twinshare virtual environment not found. Please reinstall the package."
+    exit 1
+fi
+EOF
+
+chmod +x "$WRAPPER_SCRIPT"
+
+# Add the bin directory to PATH if it's not already there
+if [[ ":$PATH:" != *":${USER_BIN_DIR}:"* ]]; then
+    print_message "Adding ${USER_BIN_DIR} to PATH in your profile..."
+    
+    # Determine which shell configuration file to use
+    SHELL_CONFIG=""
+    if [ -f "${HOME}/.bashrc" ]; then
+        SHELL_CONFIG="${HOME}/.bashrc"
+    elif [ -f "${HOME}/.zshrc" ]; then
+        SHELL_CONFIG="${HOME}/.zshrc"
+    elif [ -f "${HOME}/.profile" ]; then
+        SHELL_CONFIG="${HOME}/.profile"
     fi
     
-    # Explicitly install all required dependencies
-    print_message "Installing required dependencies..."
-    if [ "$EUID" -eq 0 ]; then
-        pip3 install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces
+    if [ -n "$SHELL_CONFIG" ]; then
+        echo "export PATH=\"\${PATH}:${USER_BIN_DIR}\"" >> "$SHELL_CONFIG"
+        print_success "Added ${USER_BIN_DIR} to PATH in ${SHELL_CONFIG}"
+        print_warning "Please run 'source ${SHELL_CONFIG}' or start a new terminal session to update your PATH."
     else
-        sudo pip3 install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces
+        print_warning "Could not find a shell configuration file. Please add ${USER_BIN_DIR} to your PATH manually."
     fi
-    
-    # Create symlink to the CLI script in /usr/local/bin
-    print_message "Creating symlink to the CLI script..."
-    if [ -f "/usr/local/bin/twinshare" ]; then
-        print_warning "Symlink already exists."
-    else
-        if [ "$EUID" -eq 0 ]; then
-            ln -s "$PROJECT_DIR/bin/twinshare" "/usr/local/bin/twinshare"
-            chmod +x "/usr/local/bin/twinshare"
-        else
-            sudo ln -s "$PROJECT_DIR/bin/twinshare" "/usr/local/bin/twinshare"
-            sudo chmod +x "/usr/local/bin/twinshare"
-        fi
-    fi
-    
-    print_message "Installation complete!"
-    print_message "You can now use the twinshare command:"
-    print_message "  twinshare --help"
 fi
 
 # Test the installation
 print_message "Testing the installation..."
 if command -v twinshare &> /dev/null; then
-    print_message "twinshare command is available."
-    twinshare --help
+    print_success "twinshare command is available in PATH."
 else
-    print_error "twinshare command is not available. Please check the installation."
-    exit 1
+    print_warning "twinshare command is not available in PATH yet. You can run it using ${WRAPPER_SCRIPT} or add ${USER_BIN_DIR} to your PATH."
 fi
 
-exit 0
+print_success "Installation completed successfully!"
+print_message "You can now use the 'twinshare' command to run the CLI."
+print_message "If the command is not found, you may need to:"
+print_message "1. Run 'source ~/.bashrc' (or your shell's config file)"
+print_message "2. Start a new terminal session"
+print_message "3. Run the command with the full path: ${WRAPPER_SCRIPT}"
+
+# Deactivate the virtual environment
+deactivate
