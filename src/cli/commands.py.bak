@@ -27,9 +27,9 @@ if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
 from src.api.rest_server import start_server
-from src.core.config import Config, config
+from src.core.config import Config
 from src.core.workspace import Workspace
-from src.p2p.discovery import discovery
+from src.p2p.discovery import DiscoveryService
 from src.p2p.network import network
 from src.p2p.protocol import (
     Message,
@@ -379,7 +379,9 @@ class CLI:
         )
 
         # Komenda: api
-        api_parser = subparsers.add_parser("api", help="Zarządzanie serwerem REST API")
+        api_parser = subparsers.add_parser(
+            "api", help="Zarządzanie serwerem REST API"
+        )
 
         api_subparsers = api_parser.add_subparsers(
             dest="api_command", title="Komendy API", help="Komenda API do wykonania"
@@ -391,10 +393,7 @@ class CLI:
         )
 
         api_start_parser.add_argument(
-            "--host",
-            type=str,
-            default="0.0.0.0",
-            help="Adres hosta (domyślnie: 0.0.0.0)",
+            "--host", type=str, default="0.0.0.0", help="Adres hosta (domyślnie: 0.0.0.0)"
         )
 
         api_start_parser.add_argument(
@@ -406,9 +405,7 @@ class CLI:
         )
 
         api_start_parser.add_argument(
-            "--log-file",
-            type=str,
-            help="Ścieżka do pliku logów (domyślnie: ~/.twinshare/logs/api.log)",
+            "--log-file", type=str, help="Ścieżka do pliku logów (domyślnie: ~/.twinshare/logs/api.log)"
         )
 
         # Komenda: api stop
@@ -814,40 +811,29 @@ class CLI:
 
                 if args.daemon:
                     # Uruchom serwer w tle
-                    print(
-                        f"Uruchamianie serwera REST API w tle na {args.host}:{args.port}"
-                    )
+                    print(f"Uruchamianie serwera REST API w tle na {args.host}:{args.port}")
                     print(f"Logi będą zapisywane do: {log_file}")
                     print(f"PID będzie zapisany do: {pid_file}")
-
+                    
                     # Uruchom skrypt start_rest_api.py jako proces w tle
-                    script_path = os.path.join(
-                        parent_dir, "scripts", "start_rest_api.py"
-                    )
+                    script_path = os.path.join(parent_dir, "scripts", "start_rest_api.py")
                     cmd = [
-                        sys.executable,
-                        script_path,
+                        sys.executable, 
+                        script_path, 
                         "start",
-                        "--host",
-                        args.host,
-                        "--port",
-                        str(args.port),
-                        "--log-file",
-                        log_file,
-                        "--pid-file",
-                        pid_file,
+                        "--host", args.host,
+                        "--port", str(args.port),
+                        "--log-file", log_file,
+                        "--pid-file", pid_file
                     ]
-
+                    
                     # Uruchom proces w tle
                     import subprocess
-
-                    subprocess.Popen(
-                        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-                    )
-
+                    subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    
                     # Poczekaj chwilę, aby proces mógł się uruchomić
                     time.sleep(1)
-
+                    
                     # Sprawdź, czy proces się uruchomił
                     if os.path.exists(pid_file):
                         with open(pid_file, "r") as f:
@@ -859,17 +845,17 @@ class CLI:
                     # Uruchom serwer w trybie interaktywnym
                     print(f"Uruchamianie serwera REST API na {args.host}:{args.port}")
                     print("Naciśnij Ctrl+C, aby zatrzymać serwer")
-
+                    
                     # Skonfiguruj logowanie
                     logging.basicConfig(
                         level=logging.INFO,
                         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
                         datefmt="%Y-%m-%d %H:%M:%S",
                     )
-
+                    
                     # Uruchom serwer
                     server = await start_server(args.host, args.port)
-
+                    
                     # Czekaj na przerwanie
                     try:
                         # Utrzymuj serwer uruchomiony
@@ -882,22 +868,22 @@ class CLI:
             except Exception as e:
                 logger.error(f"Błąd podczas uruchamiania serwera REST API: {e}")
                 print(f"Błąd: {e}")
-
+                
         elif args.api_command == "stop":
             try:
                 # Określ ścieżkę do pliku PID
                 pid_dir = os.path.join(os.path.expanduser("~"), ".twinshare", "run")
                 pid_file = os.path.join(pid_dir, "api.pid")
-
+                
                 # Sprawdź, czy plik PID istnieje
                 if not os.path.exists(pid_file):
                     print("Serwer REST API nie jest uruchomiony")
                     return
-
+                
                 # Odczytaj PID z pliku
                 with open(pid_file, "r") as f:
                     pid = int(f.read().strip())
-
+                
                 # Sprawdź, czy proces istnieje
                 try:
                     os.kill(pid, 0)  # Sprawdza, czy proces istnieje
@@ -905,14 +891,14 @@ class CLI:
                     print("Serwer REST API nie jest uruchomiony")
                     os.remove(pid_file)
                     return
-
+                
                 # Wyślij sygnał SIGTERM do procesu
                 print(f"Zatrzymywanie serwera REST API (PID: {pid})...")
                 os.kill(pid, signal.SIGTERM)
-
+                
                 # Poczekaj chwilę, aby proces mógł się zatrzymać
                 time.sleep(1)
-
+                
                 # Sprawdź, czy proces nadal istnieje
                 try:
                     os.kill(pid, 0)
@@ -920,44 +906,42 @@ class CLI:
                     os.kill(pid, signal.SIGKILL)
                 except OSError:
                     pass
-
+                
                 # Usuń plik PID
                 if os.path.exists(pid_file):
                     os.remove(pid_file)
-
+                
                 print("Serwer REST API został zatrzymany")
             except Exception as e:
                 logger.error(f"Błąd podczas zatrzymywania serwera REST API: {e}")
                 print(f"Błąd: {e}")
-
+                
         elif args.api_command == "status":
             try:
                 # Określ ścieżkę do pliku PID
                 pid_dir = os.path.join(os.path.expanduser("~"), ".twinshare", "run")
                 pid_file = os.path.join(pid_dir, "api.pid")
-
+                
                 # Sprawdź, czy plik PID istnieje
                 if not os.path.exists(pid_file):
                     print("Status serwera REST API: Zatrzymany")
                     return
-
+                
                 # Odczytaj PID z pliku
                 with open(pid_file, "r") as f:
                     pid = int(f.read().strip())
-
+                
                 # Sprawdź, czy proces istnieje
                 try:
                     os.kill(pid, 0)  # Sprawdza, czy proces istnieje
                     print(f"Status serwera REST API: Uruchomiony (PID: {pid})")
                 except OSError:
-                    print(
-                        "Status serwera REST API: Zatrzymany (plik PID istnieje, ale proces nie działa)"
-                    )
+                    print("Status serwera REST API: Zatrzymany (plik PID istnieje, ale proces nie działa)")
                     os.remove(pid_file)
             except Exception as e:
                 logger.error(f"Błąd podczas pobierania statusu serwera REST API: {e}")
                 print(f"Błąd: {e}")
-            sys.exit(1)
+{{ ... }}
 
     async def run(self, args: Optional[List[str]] = None) -> None:
         """
