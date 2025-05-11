@@ -8,6 +8,7 @@ via pip install from PyPI.
 
 import os
 import sys
+import asyncio
 import importlib.util
 from pathlib import Path
 
@@ -25,9 +26,10 @@ def main():
     # Try different import strategies
     try:
         # First try direct import (works when installed via pip)
-        from src.cli.main import main as cli_main
-        return cli_main()
-    except ImportError:
+        from src.cli.commands import CLI
+        cli = CLI()
+        return asyncio.run(cli.run())
+    except ImportError as e:
         # If that fails, try to adjust the path
         try:
             # Add parent directory to path
@@ -36,9 +38,10 @@ def main():
                 sys.path.insert(0, parent_dir)
             
             # Try import again
-            if is_module_available('src.cli.main'):
-                from src.cli.main import main as cli_main
-                return cli_main()
+            if is_module_available('src.cli.commands'):
+                from src.cli.commands import CLI
+                cli = CLI()
+                return asyncio.run(cli.run())
             else:
                 print("Error: Could not import twinshare CLI module.")
                 print("Make sure the package is installed correctly.")

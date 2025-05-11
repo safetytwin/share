@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.25] - 2025-05-11
+
+### Added
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in twinshare_cli.py
+
 ## [0.1.24] - 2025-05-11
 
 ### Added
