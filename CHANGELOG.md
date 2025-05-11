@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.36] - 2025-05-11
+
+### Added
+- Changes in README.md
+- Changes in docs/rest_api_guide.md
+- Changes in docs/vm_sharing_guide.md
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+
+### Changed
+- Changes in docs/index.md
+
 ## [0.1.35] - 2025-05-11
 
 ### Added

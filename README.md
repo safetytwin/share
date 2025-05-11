@@ -5,12 +5,14 @@ kompleksowe rozwiązanie do zarządzania, udostępniania i klonowania środowisk
 
 ## Główne dokumenty
 
-1. **Architektura systemu** - Szczegółowa architektura systemu, opis komponentów i ich interakcji
-2. **Podręcznik użytkownika** - Kompletna instrukcja obsługi dla użytkowników końcowych
-3. **Przewodnik testowania** - Metodologia i scenariusze testowe dla deweloperów
-4. **Instalacja i konfiguracja** - Szczegółowe instrukcje instalacji i konfiguracji na różnych platformach
-5. **Prompty dla dalszego rozwoju** - Gotowe prompty do generowania kolejnych modułów systemu
+1. **[Dokumentacja](docs/index.md)** - Kompletna dokumentacja projektu z menu wszystkich dostępnych przewodników
+2. **[Architektura systemu](docs/architecture.md)** - Szczegółowa architektura systemu, opis komponentów i ich interakcji
+3. **[Podręcznik użytkownika](docs/user_guide.md)** - Kompletna instrukcja obsługi dla użytkowników końcowych
+4. **[Przewodnik testowania](docs/tests.md)** - Metodologia i scenariusze testowe dla deweloperów
+5. **[Instalacja i konfiguracja](docs/installation.md)** - Szczegółowe instrukcje instalacji i konfiguracji na różnych platformach
 6. **[REST API Guide](docs/rest_api_guide.md)** - Kompletna dokumentacja REST API
+7. **[P2P Networking](docs/p2p_networking.md)** - Dokumentacja funkcjonalności sieci P2P
+8. **[VM Sharing Guide](docs/vm_sharing_guide.md)** - Przewodnik udostępniania maszyn wirtualnych
 
 ## Kluczowe moduły zaimplementowane
 

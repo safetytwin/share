@@ -50,11 +50,40 @@ If the `twinshare` command is not available after installation:
 
 ## Prerequisites
 
-Before using the VM sharing functionality, ensure that:
+Before you can share VMs, ensure that:
 
-1. The twinshare REST API service is running
-2. Your network allows connections to the API port (default: 37780)
-3. You have the twinshare CLI installed and configured
+1. You have twinshare installed on all systems that will participate in VM sharing
+2. All systems are connected to the same network
+3. The P2P discovery service is running on all systems
+4. Firewall settings allow UDP broadcasts on port 37777 (for P2P discovery)
+5. Firewall settings allow TCP connections on port 37778 (for P2P network)
+
+## P2P Network Setup
+
+The P2P network is essential for VM sharing. To set up the P2P network:
+
+1. Start the P2P services on all systems:
+   ```bash
+   twinshare p2p start
+   ```
+
+2. Verify that the P2P services are running:
+   ```bash
+   twinshare p2p status
+   ```
+
+3. Check for discovered peers:
+   ```bash
+   twinshare p2p list-peers
+   ```
+
+### P2P Network Features
+
+The P2P network in twinshare now supports:
+
+- **Peer Discovery by Hostname or IP**: You can now reference peers by their hostname or IP address in addition to their peer ID
+- **Local Connection Optimization**: Connections to localhost or local IP addresses are optimized for better performance
+- **Comprehensive VM Operations**: All VM operations (list, info, create, start, stop, delete) are supported over the P2P network
 
 ## Starting the API Server
 

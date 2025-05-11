@@ -335,54 +335,15 @@ Deletes a virtual machine.
 
 ### P2P Networking
 
-#### Get Local Peer Info
+The P2P networking endpoints allow you to manage the P2P discovery and network services.
 
-```
-GET /api/p2p/info
-```
+#### Enhanced P2P Features
 
-Returns information about the local P2P node.
+The P2P networking functionality has been enhanced with the following features:
 
-**Response:**
-
-```json
-{
-  "id": "peer-123",
-  "name": "local-node",
-  "address": "192.168.1.100",
-  "port": 8000,
-  "status": "online",
-  "services": ["vm", "discovery"],
-  "uptime": 3600
-}
-```
-
-#### List Peers
-
-```
-GET /api/p2p/peers
-```
-
-Returns a list of all peers in the P2P network.
-
-**Response:**
-
-```json
-{
-  "peers": [
-    {
-      "id": "peer-456",
-      "name": "remote-node-1",
-      "address": "192.168.1.101",
-      "port": 8000,
-      "status": "online",
-      "services": ["vm", "discovery"],
-      "last_seen": "2025-05-11T14:20:00Z"
-    },
-    ...
-  ]
-}
-```
+- **Peer Discovery by Hostname or IP**: The system now supports looking up peers by hostname or IP address in addition to peer_id
+- **Local Connection Optimization**: Connections to localhost and local IP addresses are optimized for better performance
+- **Comprehensive VM Operations**: All VM operations are supported over the P2P network
 
 #### Start P2P Services
 
@@ -390,17 +351,20 @@ Returns a list of all peers in the P2P network.
 POST /api/p2p/start
 ```
 
-Starts the P2P services.
+Starts the P2P discovery and network services.
+
+**Request:**
+
+```json
+{}
+```
 
 **Response:**
 
 ```json
 {
-  "success": true,
-  "status": "started",
-  "id": "peer-123",
-  "address": "192.168.1.100",
-  "port": 8000
+  "status": "ok",
+  "message": "P2P services started"
 }
 ```
 
@@ -410,49 +374,105 @@ Starts the P2P services.
 POST /api/p2p/stop
 ```
 
-Stops the P2P services.
+Stops the P2P discovery and network services.
+
+**Request:**
+
+```json
+{}
+```
 
 **Response:**
 
 ```json
 {
-  "success": true,
-  "status": "stopped"
+  "status": "ok",
+  "message": "P2P services stopped"
 }
 ```
 
-#### Send Message
+#### Get P2P Status
 
 ```
-POST /api/p2p/message
+GET /api/p2p/status
 ```
 
-Sends a message to a peer.
-
-**Request Body:**
-
-```json
-{
-  "peer_id": "peer-456",
-  "message_type": "HELLO",
-  "data": {
-    "message": "Hello from REST API!"
-  }
-}
-```
-
-**Required Fields:**
-- `peer_id`: ID of the target peer
-- `message_type`: Type of message to send
-- `data`: Message data (can be any JSON object)
+Returns the status of the P2P discovery and network services.
 
 **Response:**
 
 ```json
 {
-  "response": {
-    "status": "ok",
-    "message": "Hello received"
+  "status": "ok",
+  "discovery_running": true,
+  "network_running": true,
+  "peer_id": "550e8400-e29b-41d4-a716-446655440000",
+  "peer_count": 3
+}
+```
+
+#### List Peers
+
+```
+GET /api/p2p/peers
+```
+
+Returns a list of discovered peers.
+
+**Response:**
+
+```json
+{
+  "status": "ok",
+  "peers": [
+    {
+      "peer_id": "550e8400-e29b-41d4-a716-446655440001",
+      "hostname": "node1.local",
+      "ip": "192.168.1.101",
+      "port": 37778,
+      "last_seen": "2025-05-11T20:15:30Z",
+      "capabilities": ["vm", "container"]
+    },
+    {
+      "peer_id": "550e8400-e29b-41d4-a716-446655440002",
+      "hostname": "node2.local",
+      "ip": "192.168.1.102",
+      "port": 37778,
+      "last_seen": "2025-05-11T20:15:35Z",
+      "capabilities": ["vm"]
+    }
+  ]
+}
+```
+
+#### Get Peer Information
+
+```
+GET /api/p2p/peers/{peer_id}
+```
+
+Returns information about a specific peer. The peer can be identified by its peer_id, hostname, or IP address.
+
+**Path Parameters:**
+- `peer_id`: Peer ID, hostname, or IP address of the peer
+
+**Response:**
+
+```json
+{
+  "status": "ok",
+  "peer": {
+    "peer_id": "550e8400-e29b-41d4-a716-446655440001",
+    "hostname": "node1.local",
+    "ip": "192.168.1.101",
+    "port": 37778,
+    "last_seen": "2025-05-11T20:15:30Z",
+    "capabilities": ["vm", "container"],
+    "resources": {
+      "cpu_cores": 8,
+      "memory_gb": 16,
+      "disk_gb": 500
+    }
   }
 }
 ```
