@@ -1,0 +1,4 @@
+# Autoryzacja dostępu
+"""
+auth.py
+"""

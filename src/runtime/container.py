@@ -1,0 +1,4 @@
+# Zarządzanie kontenerami
+"""
+container.py
+"""

@@ -1,0 +1,4 @@
+# System logowania
+"""
+logging.py
+"""

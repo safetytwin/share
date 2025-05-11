@@ -1,0 +1,4 @@
+# Narzędzia systemowe
+"""
+system.py
+"""
