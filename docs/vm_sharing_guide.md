@@ -2,6 +2,52 @@
 
 This guide explains how to use the twinshare solution to share and manage virtual machines across a network.
 
+## Installation
+
+### Installing on a New System
+
+To install twinshare on a new system, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/safetytwin/share.git
+   cd share
+   ```
+
+2. Run the installation script:
+   ```bash
+   ./install_package.sh
+   ```
+   
+   This script will:
+   - Check for required dependencies
+   - Install the package either in a virtual environment or system-wide
+   - Create the necessary symlinks for the CLI command
+   - Test the installation
+
+3. Verify the installation:
+   ```bash
+   twinshare --help
+   ```
+
+### Troubleshooting Installation Issues
+
+If the `twinshare` command is not available after installation:
+
+1. Make sure the installation script completed successfully
+2. Check if the symlink was created:
+   ```bash
+   which twinshare
+   ```
+3. If using a virtual environment, ensure it's activated:
+   ```bash
+   source venv/bin/activate
+   ```
+4. Try running the CLI directly:
+   ```bash
+   python3 -m src.cli.main --help
+   ```
+
 ## Prerequisites
 
 Before using the VM sharing functionality, ensure that:

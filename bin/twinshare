@@ -7,13 +7,52 @@ This script is installed as a command-line tool when the package is installed.
 
 import os
 import sys
+import subprocess
+import importlib.util
 
 # Add the parent directory to the Python path to ensure the package is found
 package_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, package_dir)
 
-# Import and run the main function from the CLI module
-from src.cli.main import main
+# Function to check if a module is installed
+def is_module_installed(module_name):
+    return importlib.util.find_spec(module_name) is not None
 
-if __name__ == "__main__":
+# Check for required dependencies
+required_modules = ['yaml', 'aiohttp', 'asyncio', 'tabulate', 'cryptography', 'daemon', 'netifaces']
+missing_modules = []
+
+for module in required_modules:
+    if not is_module_installed(module):
+        missing_modules.append(module)
+
+if missing_modules:
+    print(f"Missing required dependencies: {', '.join(missing_modules)}")
+    print("Please install the missing dependencies in a virtual environment:")
+    print("\npython3 -m venv venv")
+    print("source venv/bin/activate")
+    
+    for module in missing_modules:
+        module_name = module
+        if module == 'yaml':
+            module_name = 'pyyaml'
+        elif module == 'daemon':
+            module_name = 'python-daemon'
+        print(f"pip install {module_name}")
+    
+    print("\nOr run the install_package.sh script to set up everything automatically.")
+    sys.exit(1)
+
+# Now try to import and run the main function
+try:
+    from src.cli.main import main
     sys.exit(main())
+except ImportError as e:
+    print(f"Error importing twinshare modules: {e}")
+    print("This could be due to an installation issue.")
+    print("Please try installing the package in a virtual environment:")
+    print("\npython3 -m venv venv")
+    print("source venv/bin/activate")
+    print(f"cd {package_dir} && pip install -e .")
+    print("\nOr run the install_package.sh script to set up everything automatically.")
+    sys.exit(1)

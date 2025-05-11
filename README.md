@@ -30,6 +30,21 @@ kompleksowe rozwiązanie do zarządzania, udostępniania i klonowania środowisk
 
 ## Instalacja
 
+### Instalacja na nowym systemie
+
+Aby zainstalować twinshare na nowym systemie, użyj dedykowanego skryptu `install_package.sh`:
+
+```bash
+# Sklonuj repozytorium
+git clone https://github.com/safetytwin/share.git
+cd share
+
+# Uruchom skrypt instalacyjny
+./install_package.sh
+```
+
+Skrypt przeprowadzi Cię przez proces instalacji, oferując instalację w środowisku wirtualnym lub systemową.
+
 ### Automatyczna instalacja
 
 Użyj skryptu instalacyjnego, który zainstaluje wszystkie wymagane zależności i skonfiguruje usługi:
@@ -78,6 +93,16 @@ source venv/bin/activate
 ```bash
 pip install -e .
 ```
+
+## Rozwiązywanie problemów z CLI
+
+Jeśli po instalacji komenda `twinshare` nie jest dostępna:
+
+1. Sprawdź, czy skrypt instalacyjny zakończył się sukcesem
+2. Sprawdź, czy symlink został utworzony: `which twinshare`
+3. Jeśli używasz środowiska wirtualnego, upewnij się, że jest aktywowane: `source venv/bin/activate`
+4. Spróbuj uruchomić CLI bezpośrednio: `python3 -m src.cli.main --help`
+5. Możesz również użyć skryptu w katalogu bin: `./bin/twinshare --help`
 
 ## Uruchomienie REST API
 

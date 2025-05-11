@@ -88,6 +88,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     print_message "Installing package in development mode..."
     pip install -e .
     
+    # Explicitly install all required dependencies
+    print_message "Installing required dependencies..."
+    pip install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces
+    
     # Create symlink to the CLI script
     print_message "Creating symlink to the CLI script..."
     if [ -f "venv/bin/twinshare" ]; then
@@ -109,6 +113,14 @@ else
         pip3 install -e .
     else
         sudo pip3 install -e .
+    fi
+    
+    # Explicitly install all required dependencies
+    print_message "Installing required dependencies..."
+    if [ "$EUID" -eq 0 ]; then
+        pip3 install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces
+    else
+        sudo pip3 install pyyaml aiohttp asyncio tabulate cryptography python-daemon netifaces
     fi
     
     # Create symlink to the CLI script in /usr/local/bin
