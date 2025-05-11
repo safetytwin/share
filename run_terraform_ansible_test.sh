@@ -63,9 +63,17 @@ if [ ! -z "$PORT_47777_IN_USE" ] || [ ! -z "$PORT_47778_IN_USE" ]; then
     fi
 fi
 
+# Create a temporary directory for Terraform state files
+echo "Creating temporary directory for Terraform state..."
+TEMP_DIR=$(mktemp -d)
+echo "Using temporary directory: $TEMP_DIR"
+
+# Copy Terraform files to the temporary directory
+cp -r terraform/* $TEMP_DIR/
+cd $TEMP_DIR
+
 # Clean up any existing Docker resources
 echo "Cleaning up any existing infrastructure..."
-cd terraform
 terraform destroy -auto-approve || true
 
 # Also clean up any existing Docker resources that might conflict
@@ -84,6 +92,9 @@ terraform apply -auto-approve
 # Check if Terraform apply was successful
 if [ $? -ne 0 ]; then
     echo "Error: Terraform apply failed. Check the error messages above."
+    # Clean up the temporary directory
+    cd - > /dev/null
+    rm -rf $TEMP_DIR
     exit 1
 fi
 
@@ -103,17 +114,25 @@ if [ -z "$SERVER_RUNNING" ] || [ -z "$CLIENT_RUNNING" ]; then
     echo "Check Docker logs for more information:"
     echo "  docker logs twinshare-server"
     echo "  docker logs twinshare-client"
+    # Clean up the temporary directory
+    cd - > /dev/null
+    rm -rf $TEMP_DIR
     exit 1
 fi
 
+# Return to the original directory
+cd - > /dev/null
+
 # Run Ansible playbook
 echo "Running Ansible playbook..."
-cd ../ansible
+cd ansible
 ansible-playbook -i inventory.yml playbook.yml
 
 # Check if Ansible playbook was successful
 if [ $? -ne 0 ]; then
     echo "Error: Ansible playbook failed. Check the error messages above."
+    # Clean up the temporary directory
+    rm -rf $TEMP_DIR
     exit 1
 fi
 
@@ -121,4 +140,7 @@ echo ""
 echo "=== Test Complete ==="
 echo "To view container logs, run: docker logs twinshare-server"
 echo "                        or: docker logs twinshare-client"
-echo "To clean up, run: cd terraform && terraform destroy -auto-approve"
+echo "To clean up, run: docker rm -f twinshare-server twinshare-client && docker network rm p2p_test_network"
+
+# Clean up the temporary directory
+rm -rf $TEMP_DIR

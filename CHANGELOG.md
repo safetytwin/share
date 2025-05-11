@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.45] - 2025-05-11
+
+### Added
+- Changes in .gitignore
+- Changes in Dockerfile.p2ptest
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in run_terraform_ansible_test.sh
+- Changes in setup.py
+- Changes in setup.py.bak
+
 ## [0.1.44] - 2025-05-11
 
 ### Added
