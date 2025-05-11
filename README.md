@@ -43,7 +43,18 @@ Po instalacji, komenda `twinshare` będzie dostępna bezpośrednio w terminalu:
 ```bash
 # Sprawdź dostępne komendy
 twinshare --help
+
+# Zarządzanie maszynami wirtualnymi
+twinshare vm list
+
+# Zarządzanie siecią P2P
+twinshare p2p discover
+
+# Zarządzanie przestrzeniami roboczymi
+twinshare workspace list
 ```
+
+Komenda `twinshare` jest dostępna natychmiast po instalacji, bez potrzeby konfiguracji dodatkowych skryptów czy zmiennych środowiskowych.
 
 ### Instalacja na nowym systemie z repozytorium
 

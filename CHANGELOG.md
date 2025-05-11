@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.27] - 2025-05-11
+
+### Added
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/__init__.py
+
 ## [0.1.26] - 2025-05-11
 
 ### Added
