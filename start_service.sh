@@ -1,5 +1,5 @@
 #!/bin/bash
-# SafetyTwin REST API Service Starter
+# twinshare REST API Service Starter
 # This script installs and starts the REST API service
 
 # Colors for output
@@ -10,7 +10,7 @@ NC='\033[0m' # No Color
 
 # Print colored message
 print_message() {
-    echo -e "${GREEN}[SafetyTwin]${NC} $1"
+    echo -e "${GREEN}[twinshare]${NC} $1"
 }
 
 print_warning() {
@@ -49,26 +49,26 @@ fi
 
 # Create required directories
 print_message "Creating required directories..."
-sudo mkdir -p /var/log/safetytwin /var/run/safetytwin
-sudo chown $CURRENT_USER:$CURRENT_USER /var/log/safetytwin /var/run/safetytwin
+sudo mkdir -p /var/log/twinshare /var/run/twinshare
+sudo chown $CURRENT_USER:$CURRENT_USER /var/log/twinshare /var/run/twinshare
 print_message "Directories created and permissions set."
 
 # Copy and customize service file
-if [ -f "$PROJECT_DIR/scripts/safetytwin-rest-api.service" ]; then
+if [ -f "$PROJECT_DIR/scripts/twinshare-rest-api.service" ]; then
     print_message "Customizing service file for user $CURRENT_USER..."
     # Create a temporary service file with the current user and absolute paths
-    cat "$PROJECT_DIR/scripts/safetytwin-rest-api.service" | \
+    cat "$PROJECT_DIR/scripts/twinshare-rest-api.service" | \
         sed "s/\$USER/$CURRENT_USER/g" | \
-        sed "s|/home/tom/github/safetytwin/share|$PROJECT_DIR|g" | \
+        sed "s|/home/tom/github/twinshare/share|$PROJECT_DIR|g" | \
         sed "s|WorkingDirectory=.*|WorkingDirectory=$PROJECT_DIR|g" | \
         sed "s|Environment=.*|Environment=\"PYTHONPATH=$PROJECT_DIR\"|g" | \
-        sed "s|/home/tom/github/safetytwin/share/venv/bin/python3|$PROJECT_DIR/venv/bin/python3|g" > /tmp/safetytwin-rest-api.service
+        sed "s|/home/tom/github/twinshare/share/venv/bin/python3|$PROJECT_DIR/venv/bin/python3|g" > /tmp/twinshare-rest-api.service
     
-    sudo cp /tmp/safetytwin-rest-api.service /etc/systemd/system/safetytwin-rest-api.service
-    rm /tmp/safetytwin-rest-api.service
+    sudo cp /tmp/twinshare-rest-api.service /etc/systemd/system/twinshare-rest-api.service
+    rm /tmp/twinshare-rest-api.service
     print_message "Service file copied to system directory."
 else
-    print_error "Service file not found at $PROJECT_DIR/scripts/safetytwin-rest-api.service"
+    print_error "Service file not found at $PROJECT_DIR/scripts/twinshare-rest-api.service"
     exit 1
 fi
 
@@ -77,23 +77,23 @@ sudo systemctl daemon-reload
 print_message "Systemd configuration reloaded."
 
 # Enable and start the service
-sudo systemctl enable safetytwin-rest-api
+sudo systemctl enable twinshare-rest-api
 print_message "Service enabled to start on boot."
 
-sudo systemctl start safetytwin-rest-api
+sudo systemctl start twinshare-rest-api
 status=$?
 if [ $status -ne 0 ]; then
     print_error "Failed to start the service. Checking logs..."
-    sudo journalctl -u safetytwin-rest-api -n 20
+    sudo journalctl -u twinshare-rest-api -n 20
     exit 1
 fi
 
 # Check service status
 print_message "Checking service status..."
-sudo systemctl status safetytwin-rest-api
+sudo systemctl status twinshare-rest-api
 
 print_message "REST API service installation complete!"
-print_message "You can check its status anytime with: sudo systemctl status safetytwin-rest-api"
-print_message "To stop the service: sudo systemctl stop safetytwin-rest-api"
-print_message "To restart the service: sudo systemctl restart safetytwin-rest-api"
-print_message "To view logs: sudo journalctl -u safetytwin-rest-api"
+print_message "You can check its status anytime with: sudo systemctl status twinshare-rest-api"
+print_message "To stop the service: sudo systemctl stop twinshare-rest-api"
+print_message "To restart the service: sudo systemctl restart twinshare-rest-api"
+print_message "To view logs: sudo journalctl -u twinshare-rest-api"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Przykład użycia REST API SafetyTwin do zarządzania maszynami wirtualnymi i siecią P2P.
+Przykład użycia REST API twinshare do zarządzania maszynami wirtualnymi i siecią P2P.
 """
 
 import asyncio
@@ -198,7 +198,7 @@ async def remote_vm_example(client):
 
 async def main():
     """Główna funkcja przykładowa."""
-    print("SafetyTwin REST API - Przykłady użycia")
+    print("twinshare REST API - Przykłady użycia")
     print("======================================\n")
     
     # Utwórz klienta REST API

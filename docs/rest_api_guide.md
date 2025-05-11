@@ -1,6 +1,6 @@
-# SafetyTwin REST API Guide
+# twinshare REST API Guide
 
-This document provides comprehensive documentation for the SafetyTwin REST API, which allows you to manage virtual machines, P2P networking, and remote VM management through HTTP requests.
+This document provides comprehensive documentation for the twinshare REST API, which allows you to manage virtual machines, P2P networking, and remote VM management through HTTP requests.
 
 **Last Updated:** May 11, 2025
 
@@ -21,7 +21,7 @@ This document provides comprehensive documentation for the SafetyTwin REST API, 
 
 ## Introduction
 
-The SafetyTwin REST API provides a programmatic interface to the AI Environment Manager, allowing you to:
+The twinshare REST API provides a programmatic interface to the AI Environment Manager, allowing you to:
 
 - Create, manage, and monitor virtual machines
 - Control P2P networking services
@@ -71,19 +71,19 @@ You can install the REST API server as a systemd service:
 
 ```bash
 # Copy the service file to the systemd directory
-sudo cp scripts/safetytwin-rest-api.service /etc/systemd/system/
+sudo cp scripts/twinshare-rest-api.service /etc/systemd/system/
 
 # Reload systemd
 sudo systemctl daemon-reload
 
 # Enable the service to start on boot
-sudo systemctl enable safetytwin-rest-api
+sudo systemctl enable twinshare-rest-api
 
 # Start the service
-sudo systemctl start safetytwin-rest-api
+sudo systemctl start twinshare-rest-api
 
 # Check the service status
-sudo systemctl status safetytwin-rest-api
+sudo systemctl status twinshare-rest-api
 ```
 
 ## Authentication
@@ -728,7 +728,7 @@ if __name__ == "__main__":
 
 ## Client Libraries
 
-SafetyTwin provides a Python client library for the REST API:
+twinshare provides a Python client library for the REST API:
 
 ```python
 from src.api.rest_client import RESTClient

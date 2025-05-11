@@ -1,72 +1,72 @@
-# SafetyTwin CLI Usage Examples
+# twinshare CLI Usage Examples
 
-This document provides examples of how to use the SafetyTwin CLI for managing virtual machines and P2P networking.
+This document provides examples of how to use the twinshare CLI for managing virtual machines and P2P networking.
 
 ## Installation
 
-First, install the SafetyTwin package:
+First, install the twinshare package:
 
 ```bash
-cd /path/to/safetytwin/share
+cd /path/to/twinshare/share
 pip install -e .
 ```
 
-This will install the `safetytwin` command-line tool.
+This will install the `twinshare` command-line tool.
 
 ## Virtual Machine Management
 
 ### List VMs
 
 ```bash
-safetytwin vm list
+twinshare vm list
 ```
 
 To get output in JSON format:
 
 ```bash
-safetytwin vm list --format json
+twinshare vm list --format json
 ```
 
 ### Create a VM
 
 ```bash
-safetytwin vm create my-vm --image ubuntu-20.04 --cpu 2 --memory 4096 --disk 40
+twinshare vm create my-vm --image ubuntu-20.04 --cpu 2 --memory 4096 --disk 40
 ```
 
 ### Start a VM
 
 ```bash
-safetytwin vm start my-vm
+twinshare vm start my-vm
 ```
 
 ### Get VM Status
 
 ```bash
-safetytwin vm status my-vm
+twinshare vm status my-vm
 ```
 
 ### Stop a VM
 
 ```bash
-safetytwin vm stop my-vm
+twinshare vm stop my-vm
 ```
 
 To force stop:
 
 ```bash
-safetytwin vm stop my-vm --force
+twinshare vm stop my-vm --force
 ```
 
 ### Delete a VM
 
 ```bash
-safetytwin vm delete my-vm
+twinshare vm delete my-vm
 ```
 
 To keep the disk:
 
 ```bash
-safetytwin vm delete my-vm --keep-disk
+twinshare vm delete my-vm --keep-disk
 ```
 
 ## P2P Network Management
@@ -74,31 +74,31 @@ safetytwin vm delete my-vm --keep-disk
 ### Start P2P Services
 
 ```bash
-safetytwin p2p start
+twinshare p2p start
 ```
 
 ### List Peers
 
 ```bash
-safetytwin p2p list
+twinshare p2p list
 ```
 
 To get output in JSON format:
 
 ```bash
-safetytwin p2p list --format json
+twinshare p2p list --format json
 ```
 
 ### Send a Message to a Peer
 
 ```bash
-safetytwin p2p send peer-id message-type '{"key": "value"}'
+twinshare p2p send peer-id message-type '{"key": "value"}'
 ```
 
 ### Stop P2P Services
 
 ```bash
-safetytwin p2p stop
+twinshare p2p stop
 ```
 
 ## Remote VM Management
@@ -106,31 +106,31 @@ safetytwin p2p stop
 ### List Remote VMs
 
 ```bash
-safetytwin remote vm-list peer-id
+twinshare remote vm-list peer-id
 ```
 
 ### Create a Remote VM
 
 ```bash
-safetytwin remote vm-create peer-id my-vm --image ubuntu-20.04 --cpu 2 --memory 4096 --disk 40
+twinshare remote vm-create peer-id my-vm --image ubuntu-20.04 --cpu 2 --memory 4096 --disk 40
 ```
 
 ### Start a Remote VM
 
 ```bash
-safetytwin remote vm-start peer-id vm-id
+twinshare remote vm-start peer-id vm-id
 ```
 
 ### Stop a Remote VM
 
 ```bash
-safetytwin remote vm-stop peer-id vm-id
+twinshare remote vm-stop peer-id vm-id
 ```
 
 ### Delete a Remote VM
 
 ```bash
-safetytwin remote vm-delete peer-id vm-id
+twinshare remote vm-delete peer-id vm-id
 ```
 
 ## Advanced Usage
@@ -140,7 +140,7 @@ safetytwin remote vm-delete peer-id vm-id
 To enable debug logging:
 
 ```bash
-safetytwin --debug vm list
+twinshare --debug vm list
 ```
 
 ### Custom Configuration
@@ -148,5 +148,5 @@ safetytwin --debug vm list
 To use a custom configuration file:
 
 ```bash
-safetytwin --config /path/to/config.yaml vm list
+twinshare --config /path/to/config.yaml vm list
 ```

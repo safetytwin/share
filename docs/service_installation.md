@@ -1,6 +1,6 @@
-# SafetyTwin REST API Service Installation Guide
+# twinshare REST API Service Installation Guide
 
-This guide provides step-by-step instructions for installing and configuring the SafetyTwin REST API as a system service.
+This guide provides step-by-step instructions for installing and configuring the twinshare REST API as a system service.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ For a quick installation, use the provided script:
 
 ```bash
 # Navigate to the project directory
-cd /path/to/safetytwin/share
+cd /path/to/twinshare/share
 
 # Make the script executable if needed
 chmod +x start_service.sh
@@ -32,8 +32,8 @@ If you prefer to install the service manually or if the script doesn't work, fol
 First, create the directories for logs and PID files:
 
 ```bash
-sudo mkdir -p /var/log/safetytwin /var/run/safetytwin
-sudo chown $USER:$USER /var/log/safetytwin /var/run/safetytwin
+sudo mkdir -p /var/log/twinshare /var/run/twinshare
+sudo chown $USER:$USER /var/log/twinshare /var/run/twinshare
 ```
 
 ### 2. Install the Service File
@@ -42,21 +42,21 @@ Create a systemd service file for the REST API:
 
 ```bash
 # Navigate to the project directory
-cd /path/to/safetytwin/share
+cd /path/to/twinshare/share
 
 # Get the absolute path to the project directory
 PROJECT_DIR=$(pwd)
 
 # Create a temporary service file with your username and the correct path
-cat scripts/safetytwin-rest-api.service | \
+cat scripts/twinshare-rest-api.service | \
     sed "s/\$USER/$USER/g" | \
-    sed "s|/home/tom/github/safetytwin/share|$PROJECT_DIR|g" > /tmp/safetytwin-rest-api.service
+    sed "s|/home/tom/github/twinshare/share|$PROJECT_DIR|g" > /tmp/twinshare-rest-api.service
 
 # Copy the service file to the systemd directory
-sudo cp /tmp/safetytwin-rest-api.service /etc/systemd/system/safetytwin-rest-api.service
+sudo cp /tmp/twinshare-rest-api.service /etc/systemd/system/twinshare-rest-api.service
 
 # Clean up
-rm /tmp/safetytwin-rest-api.service
+rm /tmp/twinshare-rest-api.service
 ```
 
 ### 3. Reload Systemd Configuration
@@ -69,16 +69,16 @@ sudo systemctl daemon-reload
 
 ```bash
 # Enable the service to start on boot
-sudo systemctl enable safetytwin-rest-api
+sudo systemctl enable twinshare-rest-api
 
 # Start the service
-sudo systemctl start safetytwin-rest-api
+sudo systemctl start twinshare-rest-api
 ```
 
 ### 5. Verify the Service Status
 
 ```bash
-sudo systemctl status safetytwin-rest-api
+sudo systemctl status twinshare-rest-api
 ```
 
 You should see output indicating that the service is active (running).
@@ -88,32 +88,32 @@ You should see output indicating that the service is active (running).
 ### Checking Status
 
 ```bash
-sudo systemctl status safetytwin-rest-api
+sudo systemctl status twinshare-rest-api
 ```
 
 ### Stopping the Service
 
 ```bash
-sudo systemctl stop safetytwin-rest-api
+sudo systemctl stop twinshare-rest-api
 ```
 
 ### Restarting the Service
 
 ```bash
-sudo systemctl restart safetytwin-rest-api
+sudo systemctl restart twinshare-rest-api
 ```
 
 ### Viewing Logs
 
 ```bash
 # View all logs
-sudo journalctl -u safetytwin-rest-api
+sudo journalctl -u twinshare-rest-api
 
 # View recent logs and follow new entries
-sudo journalctl -u safetytwin-rest-api -f
+sudo journalctl -u twinshare-rest-api -f
 
 # View logs since a specific time
-sudo journalctl -u safetytwin-rest-api --since "2025-05-11 18:00:00"
+sudo journalctl -u twinshare-rest-api --since "2025-05-11 18:00:00"
 ```
 
 ## Troubleshooting
@@ -123,14 +123,14 @@ sudo journalctl -u safetytwin-rest-api --since "2025-05-11 18:00:00"
 If the service fails to start, check the logs for errors:
 
 ```bash
-sudo journalctl -u safetytwin-rest-api -n 50
+sudo journalctl -u twinshare-rest-api -n 50
 ```
 
 Common issues include:
 
-1. **Path problems**: The service file might contain incorrect paths. Make sure to replace `/home/tom/github/safetytwin/share` with your actual project path.
+1. **Path problems**: The service file might contain incorrect paths. Make sure to replace `/home/tom/github/twinshare/share` with your actual project path.
 
-2. **Missing directories**: Ensure `/var/log/safetytwin` and `/var/run/safetytwin` exist and have the correct permissions.
+2. **Missing directories**: Ensure `/var/log/twinshare` and `/var/run/twinshare` exist and have the correct permissions.
 
 3. **Python environment issues**: The service might not have access to the required Python packages. Make sure the service file is using the Python from the virtual environment:
 

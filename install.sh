@@ -1,6 +1,6 @@
 #!/bin/bash
-# SafetyTwin Installation Script
-# This script installs all necessary dependencies for the SafetyTwin project
+# twinshare Installation Script
+# This script installs all necessary dependencies for the twinshare project
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -15,7 +15,7 @@ SKIP_SERVICE_INSTALL=false
 
 # Print colored message
 print_message() {
-    echo -e "${GREEN}[SafetyTwin Installer]${NC} $1"
+    echo -e "${GREEN}[twinshare Installer]${NC} $1"
 }
 
 print_warning() {
@@ -277,38 +277,38 @@ install_rest_api_service() {
     if command -v systemctl > /dev/null; then
         # Create required directories
         print_message "Creating required directories..."
-        sudo mkdir -p /var/log/safetytwin /var/run/safetytwin
-        sudo chown $USER:$USER /var/log/safetytwin /var/run/safetytwin
+        sudo mkdir -p /var/log/twinshare /var/run/twinshare
+        sudo chown $USER:$USER /var/log/twinshare /var/run/twinshare
         print_message "Directories created and permissions set."
         
         # Copy and customize service file
         print_message "Customizing service file for user $USER..."
         # Create a temporary service file with the current user and absolute paths
-        cat "$SCRIPT_DIR/scripts/safetytwin-rest-api.service" | \
+        cat "$SCRIPT_DIR/scripts/twinshare-rest-api.service" | \
             sed "s/\$USER/$USER/g" | \
-            sed "s|/home/tom/github/safetytwin/share|$SCRIPT_DIR|g" | \
+            sed "s|/home/tom/github/twinshare/share|$SCRIPT_DIR|g" | \
             sed "s|WorkingDirectory=.*|WorkingDirectory=$SCRIPT_DIR|g" | \
             sed "s|Environment=.*|Environment=\"PYTHONPATH=$SCRIPT_DIR\"|g" | \
-            sed "s|/home/tom/github/safetytwin/share/venv/bin/python3|$SCRIPT_DIR/venv/bin/python3|g" > /tmp/safetytwin-rest-api.service
+            sed "s|/home/tom/github/twinshare/share/venv/bin/python3|$SCRIPT_DIR/venv/bin/python3|g" > /tmp/twinshare-rest-api.service
         
-        sudo cp /tmp/safetytwin-rest-api.service /etc/systemd/system/safetytwin-rest-api.service
-        rm /tmp/safetytwin-rest-api.service
+        sudo cp /tmp/twinshare-rest-api.service /etc/systemd/system/twinshare-rest-api.service
+        rm /tmp/twinshare-rest-api.service
         
         # Reload systemd
         sudo systemctl daemon-reload
         
         # Enable and start the service
-        sudo systemctl enable safetytwin-rest-api
-        sudo systemctl start safetytwin-rest-api
+        sudo systemctl enable twinshare-rest-api
+        sudo systemctl start twinshare-rest-api
         status=$?
         if [ $status -ne 0 ]; then
-            print_warning "Failed to start the service. Check logs with: sudo journalctl -u safetytwin-rest-api"
+            print_warning "Failed to start the service. Check logs with: sudo journalctl -u twinshare-rest-api"
         else
             print_message "REST API service installed and started."
         fi
         
-        print_message "You can check its status with: sudo systemctl status safetytwin-rest-api"
-        print_message "To view logs: sudo journalctl -u safetytwin-rest-api"
+        print_message "You can check its status with: sudo systemctl status twinshare-rest-api"
+        print_message "To view logs: sudo journalctl -u twinshare-rest-api"
     else
         print_warning "systemctl not found. Skipping REST API service installation."
         print_message "You can start the REST API manually with:"
@@ -318,7 +318,7 @@ install_rest_api_service() {
 
 # Main installation process
 main() {
-    print_message "Starting SafetyTwin installation..."
+    print_message "Starting twinshare installation..."
     
     # Get script directory
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

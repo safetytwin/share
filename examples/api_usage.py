@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Przykład użycia API SafetyTwin do zarządzania maszynami wirtualnymi i siecią P2P.
+Przykład użycia API twinshare do zarządzania maszynami wirtualnymi i siecią P2P.
 """
 
 import asyncio
@@ -174,7 +174,7 @@ async def remote_vm_example():
 
 async def main():
     """Główna funkcja przykładowa."""
-    print("SafetyTwin API - Przykłady użycia")
+    print("twinshare API - Przykłady użycia")
     print("================================\n")
     
     # Przykład zarządzania maszynami wirtualnymi

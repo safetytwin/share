@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.11] - 2025-05-11
+
+### Added
+- Changes in CHANGELOG.md
+- Changes in README.md
+- Changes in examples/api_usage.py
+- Changes in examples/cli_usage.md
+- Changes in examples/rest_api_usage.py
+- Changes in install.sh
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/core/config.py
+- Changes in start_service.sh
+
+### Changed
+- Changes in =0.7.0
+- Changes in docs/example_vm_sharing.md
+- Changes in fix_ssl_config.sh
+
 ## [0.1.10] - 2025-05-11
 
 ### Added
@@ -161,7 +182,7 @@ All notable changes to this project will be documented in this file.
 - Changes in README.md
 - Changes in install.sh
 - Changes in requirements.txt
-- Changes in scripts/safetytwin-rest-api.service
+- Changes in scripts/twinshare-rest-api.service
 - Changes in setup.py
 - Changes in start_service.sh
 

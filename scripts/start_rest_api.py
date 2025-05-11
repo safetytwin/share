@@ -84,15 +84,15 @@ def parse_arguments():
     parser.add_argument(
         "--log-file",
         type=str,
-        default="/var/log/safetytwin/rest_api.log",
-        help="Ścieżka do pliku logów (domyślnie: /var/log/safetytwin/rest_api.log)"
+        default="/var/log/twinshare/rest_api.log",
+        help="Ścieżka do pliku logów (domyślnie: /var/log/twinshare/rest_api.log)"
     )
     
     parser.add_argument(
         "--pid-file",
         type=str,
-        default="/var/run/safetytwin/rest_api.pid",
-        help="Ścieżka do pliku PID (domyślnie: /var/run/safetytwin/rest_api.pid)"
+        default="/var/run/twinshare/rest_api.pid",
+        help="Ścieżka do pliku PID (domyślnie: /var/run/twinshare/rest_api.pid)"
     )
     
     parser.add_argument(

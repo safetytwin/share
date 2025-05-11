@@ -87,22 +87,22 @@ pip install -e .
 
 ```bash
 # Utwórz katalogi dla logów i PID
-sudo mkdir -p /var/log/safetytwin /var/run/safetytwin
+sudo mkdir -p /var/log/twinshare /var/run/twinshare
 
 # Skopiuj plik usługi
-sudo cp scripts/safetytwin-rest-api.service /etc/systemd/system/
+sudo cp scripts/twinshare-rest-api.service /etc/systemd/system/
 
 # Załaduj konfigurację systemd
 sudo systemctl daemon-reload
 
 # Włącz usługę do autostartu
-sudo systemctl enable safetytwin-rest-api
+sudo systemctl enable twinshare-rest-api
 
 # Uruchom usługę
-sudo systemctl start safetytwin-rest-api
+sudo systemctl start twinshare-rest-api
 
 # Sprawdź status
-sudo systemctl status safetytwin-rest-api
+sudo systemctl status twinshare-rest-api
 ```
 
 ### Ręczne uruchomienie

@@ -75,6 +75,11 @@ DEFAULT_CONFIG = {
             "id": os.environ.get("AI_ENV_NODE_ID", ""),
             "features": [],  # Funkcje obsługiwane przez ten węzeł
         },
+        "network": {
+            "ssl": os.environ.get("AI_ENV_P2P_SSL", "false").lower() == "true",
+            "cert_file": "",
+            "key_file": "",
+        },
         "federation": {
             "enabled": os.environ.get("AI_ENV_FEDERATION_ENABLE", "false").lower()
             == "true",
