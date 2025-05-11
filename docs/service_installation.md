@@ -83,6 +83,58 @@ sudo systemctl status twinshare-rest-api
 
 You should see output indicating that the service is active (running).
 
+## Starting the REST API Service
+
+There are two ways to start the twinshare REST API service:
+
+### Method 1: Using the start_api.sh Script
+
+The easiest way to start the REST API service is using the provided script:
+
+```bash
+# Start the API
+./start_api.sh start
+
+# Check the status
+./start_api.sh status
+
+# Stop the API
+./start_api.sh stop
+
+# Restart the API
+./start_api.sh restart
+```
+
+This script handles all the necessary configuration and provides clear feedback about the service status.
+
+### Method 2: Using systemd Service
+
+For a more permanent installation, you can use the systemd service:
+
+```bash
+# Enable the service to start at boot
+sudo systemctl enable twinshare-rest-api
+
+# Start the service
+sudo systemctl start twinshare-rest-api
+
+# Check service status
+sudo systemctl status twinshare-rest-api
+```
+
+If you encounter any issues with the systemd service, refer to the [Troubleshooting Guide](troubleshooting.md).
+
+## Verifying the API is Running
+
+Once the API is running, you can verify it by accessing the API endpoint:
+
+```bash
+# Check if the API is responding
+curl http://localhost:37780/status
+```
+
+You should receive a JSON response indicating the API is running.
+
 ## Managing the Service
 
 ### Checking Status

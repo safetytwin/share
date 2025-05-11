@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.12] - 2025-05-11
+
+### Added
+- Changes in docs/service_installation.md
+- Changes in docs/troubleshooting.md
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in scripts/start_rest_api.py
+- Changes in scripts/twinshare-rest-api.service
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/api/rest_server.py
+- Changes in src/core/config.py
+- Changes in src/runtime/vm.py
+- Changes in twinshare
+
+### Changed
+- Changes in fix_cli_command.sh
+
 ## [0.1.11] - 2025-05-11
 
 ### Added

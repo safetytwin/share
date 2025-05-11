@@ -91,8 +91,8 @@ def parse_arguments():
     parser.add_argument(
         "--pid-file",
         type=str,
-        default="/var/run/twinshare/rest_api.pid",
-        help="Ścieżka do pliku PID (domyślnie: /var/run/twinshare/rest_api.pid)"
+        default="/run/twinshare/rest_api.pid",
+        help="Ścieżka do pliku PID (domyślnie: /run/twinshare/rest_api.pid)"
     )
     
     parser.add_argument(

@@ -19,7 +19,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import yaml
 
-from ..core.config import config
+from ..core.config import CONFIG_DIR, config
 
 logger = logging.getLogger("ai-env-manager.runtime.vm")
 
@@ -40,7 +40,7 @@ class VMRuntime:
             vm_dir: Katalog z obrazami VM (opcjonalny)
         """
         self.vm_dir = vm_dir or Path(
-            config.get("paths.vm_images", config.CONFIG_DIR / "vm-images")
+            config.get("paths.vm_images", CONFIG_DIR / "vm-images")
         )
         self.vm_dir.mkdir(parents=True, exist_ok=True)
 

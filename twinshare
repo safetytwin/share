@@ -1,0 +1,4 @@
+#!/bin/bash
+# Simple wrapper for twinshare command
+export PYTHONPATH="$HOME/github/safetytwin/share"
+python3 -m src.cli.main "$@"

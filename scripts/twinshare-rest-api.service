@@ -4,14 +4,14 @@ After=network.target
 
 [Service]
 Type=forking
-User=$USER
-Group=$USER
-WorkingDirectory=/home/tom/github/twinshare/share
-Environment="PYTHONPATH=/home/tom/github/twinshare/share"
-ExecStartPre=/bin/mkdir -p /var/log/twinshare /var/run/twinshare
-ExecStart=/home/tom/github/twinshare/share/venv/bin/python3 /home/tom/github/twinshare/share/scripts/start_rest_api.py start --log-file /var/log/twinshare/rest_api.log --pid-file /var/run/twinshare/rest_api.pid
-ExecStop=/home/tom/github/twinshare/share/venv/bin/python3 /home/tom/github/twinshare/share/scripts/start_rest_api.py stop --pid-file /var/run/twinshare/rest_api.pid
-PIDFile=/var/run/twinshare/rest_api.pid
+User=tom
+Group=tom
+WorkingDirectory=/home/tom/github/safetytwin/share
+Environment="PYTHONPATH=/home/tom/github/safetytwin/share"
+ExecStartPre=/bin/mkdir -p /var/log/twinshare /run/twinshare
+ExecStart=/home/tom/github/safetytwin/share/venv/bin/python3 /home/tom/github/safetytwin/share/scripts/start_rest_api.py start --log-file /var/log/twinshare/rest_api.log --pid-file /run/twinshare/rest_api.pid
+ExecStop=/home/tom/github/safetytwin/share/venv/bin/python3 /home/tom/github/safetytwin/share/scripts/start_rest_api.py stop --pid-file /run/twinshare/rest_api.pid
+PIDFile=/run/twinshare/rest_api.pid
 Restart=on-failure
 RestartSec=5
 

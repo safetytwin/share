@@ -20,7 +20,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("ai-environment-manager.log"),
         logging.StreamHandler(),
     ],
 )
@@ -400,20 +399,6 @@ def configure_logging():
     # Usuń istniejące handlery
     for handler in logger.handlers[:]:
         logger.removeHandler(handler)
-
-    # Dodaj handler dla pliku
-    try:
-        from logging.handlers import RotatingFileHandler
-
-        file_handler = RotatingFileHandler(
-            log_file, maxBytes=max_size, backupCount=backup_count
-        )
-        file_handler.setFormatter(
-            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        )
-        logger.addHandler(file_handler)
-    except Exception as e:
-        print(f"Błąd podczas konfiguracji handlera pliku logów: {e}")
 
     # Dodaj handler dla konsoli
     console_handler = logging.StreamHandler()

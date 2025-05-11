@@ -116,6 +116,13 @@ class RESTServer:
             "/api/remote/{peer_id}/vm/{vm_id}", self.handle_remote_vm_delete
         )
 
+        # Trasy udostępniania workspace'ów
+        self.app.router.add_get("/shared", self.handle_shared_list)
+        self.app.router.add_post("/shared/{workspace_name}", self.handle_shared_update)
+        self.app.router.add_delete(
+            "/shared/{workspace_name}", self.handle_shared_delete
+        )
+
     async def handle_root(self, request: Request) -> Response:
         """
         Obsługuje żądanie do głównej trasy.
@@ -534,6 +541,89 @@ class RESTServer:
         except Exception as e:
             logger.error(f"Error deleting remote VM: {e}")
             return json_error(500, str(e))
+
+    # Handlery udostępniania workspace'ów
+
+    async def handle_shared_list(self, request: Request) -> Response:
+        """
+        Obsługuje żądanie listowania udostępnionych workspace'ów.
+
+        Args:
+            request: Żądanie HTTP
+
+        Returns:
+            Response: Odpowiedź HTTP
+        """
+        try:
+            # W rzeczywistej implementacji, pobierz listę udostępnionych workspace'ów
+            # Na razie zwracamy pustą listę
+            shared_workspaces = []
+            return json_response({"shared_workspaces": shared_workspaces})
+        except Exception as e:
+            logger.error(f"Błąd podczas listowania udostępnionych workspace'ów: {e}")
+            return json_error(
+                500, f"Błąd podczas listowania udostępnionych workspace'ów: {e}"
+            )
+
+    @require_json
+    async def handle_shared_update(self, request: Request) -> Response:
+        """
+        Obsługuje żądanie aktualizacji udostępnienia workspace'a.
+
+        Args:
+            request: Żądanie HTTP
+
+        Returns:
+            Response: Odpowiedź HTTP
+        """
+        try:
+            workspace_name = request.match_info["workspace_name"]
+            data = await request.json()
+
+            if "enable" not in data:
+                return json_error(400, "Brak wymaganego pola 'enable'")
+
+            enable = data["enable"]
+
+            # W rzeczywistej implementacji, aktualizuj status udostępnienia workspace'a
+            # Na razie tylko logujemy akcję
+            action = "udostępniono" if enable else "wyłączono udostępnianie"
+            logger.info(f"Workspace '{workspace_name}' {action}")
+
+            return json_response(
+                {"success": True, "workspace": workspace_name, "shared": enable}
+            )
+        except Exception as e:
+            logger.error(f"Błąd podczas aktualizacji udostępnienia workspace'a: {e}")
+            return json_error(
+                500, f"Błąd podczas aktualizacji udostępnienia workspace'a: {e}"
+            )
+
+    async def handle_shared_delete(self, request: Request) -> Response:
+        """
+        Obsługuje żądanie usunięcia udostępnienia workspace'a.
+
+        Args:
+            request: Żądanie HTTP
+
+        Returns:
+            Response: Odpowiedź HTTP
+        """
+        try:
+            workspace_name = request.match_info["workspace_name"]
+
+            # W rzeczywistej implementacji, usuń udostępnienie workspace'a
+            # Na razie tylko logujemy akcję
+            logger.info(f"Usunięto udostępnienie workspace'a '{workspace_name}'")
+
+            return json_response(
+                {"success": True, "workspace": workspace_name, "shared": False}
+            )
+        except Exception as e:
+            logger.error(f"Błąd podczas usuwania udostępnienia workspace'a: {e}")
+            return json_error(
+                500, f"Błąd podczas usuwania udostępnienia workspace'a: {e}"
+            )
 
     async def start(self) -> None:
         """Uruchamia serwer REST API."""

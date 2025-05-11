@@ -9,6 +9,7 @@ This guide provides solutions for common issues you might encounter when using t
 - [SSL Configuration Issues](#ssl-configuration-issues)
 - [Permission Problems](#permission-problems)
 - [Common Error Messages](#common-error-messages)
+- [CLI Command Issues](#cli-command-issues)
 
 ## Service Issues
 
@@ -344,6 +345,66 @@ twinshare config set api.allow_remote true
 # Restart the service
 sudo systemctl restart twinshare-rest-api
 ```
+
+## CLI Command Issues
+
+### "Command not found: twinshare"
+
+**Symptoms:**
+- After installation, the `twinshare` command is not found
+- You get a "command not found" error when trying to run twinshare commands
+
+**Solutions:**
+
+1. **Make sure your virtual environment is activated:**
+   ```bash
+   source venv/bin/activate
+   ```
+
+2. **If the command is still not found, create a wrapper script:**
+   ```bash
+   # Run the fix script
+   ./fix_twinshare_cli.sh
+   
+   # This creates a twinshare command in the current directory
+   # You can then use it with:
+   ./twinshare <command>
+   ```
+
+3. **Ensure ~/.local/bin is in your PATH if you want to use the command globally:**
+   ```bash
+   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+
+### "Invalid choice: 'api' (choose from 'vm', 'p2p', 'remote')"
+
+**Symptoms:**
+- When trying to run `twinshare api start`, you get an error about 'api' being an invalid choice
+
+**Solutions:**
+
+1. **The twinshare CLI doesn't have an "api" command. Instead, use the provided script to manage the API service:**
+   ```bash
+   # Start the API service
+   ./start_api.sh start
+   
+   # Check the status
+   ./start_api.sh status
+   
+   # Stop the API service
+   ./start_api.sh stop
+   ```
+
+2. **Alternatively, you can directly use the REST API script:**
+   ```bash
+   python3 scripts/start_rest_api.py start --host 0.0.0.0 --port 37780
+   ```
+
+3. **For a system-wide installation, use the systemd service:**
+   ```bash
+   sudo systemctl start twinshare-rest-api
+   ```
 
 ## Getting Help
 
