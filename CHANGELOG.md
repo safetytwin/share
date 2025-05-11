@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.37] - 2025-05-11
+
+### Added
+- Changes in docs/p2p_networking.md
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/cli/commands.py
+- Changes in src/p2p/discovery.py
+- Changes in src/p2p/network.py
+
 ## [0.1.36] - 2025-05-11
 
 ### Added

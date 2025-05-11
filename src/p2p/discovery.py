@@ -113,23 +113,29 @@ class P2PDiscovery:
         logger.info(f"Uruchomiono wykrywanie P2P na porcie {self.port}")
         return True
 
-    def stop(self) -> bool:
+    def stop(self) -> None:
         """Zatrzymuje wykrywanie P2P"""
         if not self.running:
             logger.info("Wykrywanie P2P już jest zatrzymane")
-            return False
+            return
 
         self.running = False
-
-        # Poczekaj na zakończenie wątków
         if self.listen_thread:
-            self.listen_thread.join(1)
-
+            self.listen_thread.join()
+            self.listen_thread = None
         if self.broadcast_thread:
-            self.broadcast_thread.join(1)
-
+            self.broadcast_thread.join()
+            self.broadcast_thread = None
         logger.info("Zatrzymano wykrywanie P2P")
-        return True
+
+    def is_running(self) -> bool:
+        """
+        Sprawdza czy usługa wykrywania P2P jest uruchomiona.
+
+        Returns:
+            bool: True jeśli usługa jest uruchomiona, False w przeciwnym razie
+        """
+        return self.running
 
     def register_callback(self, callback: Callable[[str, PeerInfo], None]) -> None:
         """Rejestruje funkcję zwrotną wywoływaną przy wykryciu/aktualizacji węzła"""

@@ -414,6 +414,15 @@ class P2PNetwork:
         logger.info("Zatrzymano sieć P2P")
         return True
 
+    def is_running(self) -> bool:
+        """
+        Sprawdza czy usługa sieciowa P2P jest uruchomiona.
+
+        Returns:
+            bool: True jeśli usługa jest uruchomiona, False w przeciwnym razie
+        """
+        return self.running
+
     def _on_peer_discovered(self, event: str, peer: PeerInfo) -> None:
         """
         Callback wywoływany przy wykryciu nowego węzła.

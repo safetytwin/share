@@ -202,6 +202,11 @@ class CLI:
             "stop", help="Zatrzymuje usługi P2P"
         )
 
+        # Komenda: p2p status
+        p2p_status_parser = p2p_subparsers.add_parser(
+            "status", help="Wyświetla status usług P2P"
+        )
+
         # Komenda: p2p list
         p2p_list_parser = p2p_subparsers.add_parser(
             "list", help="Listuje węzły w sieci P2P"
@@ -592,6 +597,15 @@ class CLI:
             except Exception as e:
                 print(f"Błąd podczas wysyłania wiadomości: {e}")
                 sys.exit(1)
+
+        elif args.p2p_command == "status":
+            print("Status usług P2P:")
+            print(
+                f"  Discovery: {'Uruchomiony' if discovery.is_running() else 'Zatrzymany'}"
+            )
+            print(
+                f"  Network: {'Uruchomiony' if network.is_running() else 'Zatrzymany'}"
+            )
 
         else:
             print("Nieznana komenda P2P")

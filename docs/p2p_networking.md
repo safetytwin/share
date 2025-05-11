@@ -49,8 +49,17 @@ twinshare p2p start
 # Stop P2P services
 twinshare p2p stop
 
-# Check P2P status
+# Check the status of P2P services
 twinshare p2p status
+```
+
+The `status` command will show whether the P2P discovery and network services are currently running or stopped.
+
+### Listing Peers
+
+```bash
+# List peers
+twinshare p2p list
 ```
 
 ### Remote VM Management
