@@ -74,7 +74,7 @@ The P2P network is essential for VM sharing. To set up the P2P network:
 
 3. Check for discovered peers:
    ```bash
-   twinshare p2p list-peers
+   twinshare p2p list
    ```
 
 ### P2P Network Features
@@ -83,7 +83,36 @@ The P2P network in twinshare now supports:
 
 - **Peer Discovery by Hostname or IP**: You can now reference peers by their hostname or IP address in addition to their peer ID
 - **Local Connection Optimization**: Connections to localhost or local IP addresses are optimized for better performance
-- **Comprehensive VM Operations**: All VM operations (list, info, create, start, stop, delete) are supported over the P2P network
+- **Comprehensive VM Operations**: All VM operations (list, create, start, stop, delete) are supported over the P2P network
+
+## Remote VM Management
+
+To manage VMs on remote systems:
+
+1. List VMs on a remote system:
+   ```bash
+   twinshare remote vm-list --peer <peer_id_or_hostname_or_ip>
+   ```
+
+2. Create a VM on a remote system:
+   ```bash
+   twinshare remote vm-create --peer <peer_id_or_hostname_or_ip> --name <vm_name> --image <image> --memory <memory_mb> --disk <disk_gb>
+   ```
+
+3. Start a VM on a remote system:
+   ```bash
+   twinshare remote vm-start --peer <peer_id_or_hostname_or_ip> --name <vm_name>
+   ```
+
+4. Stop a VM on a remote system:
+   ```bash
+   twinshare remote vm-stop --peer <peer_id_or_hostname_or_ip> --name <vm_name>
+   ```
+
+5. Delete a VM on a remote system:
+   ```bash
+   twinshare remote vm-delete --peer <peer_id_or_hostname_or_ip> --name <vm_name>
+   ```
 
 ## Starting the API Server
 
@@ -132,70 +161,6 @@ twinshare workspace share --name test-vm
 
 # Unshare a workspace
 twinshare workspace unshare --name my_workspace
-```
-
-## Managing Remote VMs
-
-Once a workspace is shared, you can manage its VMs from other machines using the twinshare CLI.
-
-### List Available Remote VMs
-
-```bash
-twinshare remote vm-list --peer <peer_address>
-```
-
-Example:
-```bash
-twinshare remote vm-list --peer 192.168.1.100
-```
-
-### Create a VM on a Remote Peer
-
-```bash
-twinshare remote vm-create --peer <peer_address> --name <vm_name> --image <image_name> --memory <memory_size> --vcpus <num_cpus>
-```
-
-Example:
-```bash
-twinshare remote vm-create --peer 192.168.1.100 --name test-vm --image ubuntu-20.04 --memory 2048 --vcpus 2
-```
-
-### Start a Remote VM
-
-```bash
-twinshare remote vm-start --peer <peer_address> --name <vm_name>
-```
-
-Example:
-```bash
-twinshare remote vm-start --peer 192.168.1.100 --name test-vm
-```
-
-### Stop a Remote VM
-
-```bash
-twinshare remote vm-stop --peer <peer_address> --name <vm_name> [--force]
-```
-
-Example:
-```bash
-twinshare remote vm-stop --peer 192.168.1.100 --name test-vm
-```
-
-Use the `--force` flag to force stop a VM that is not responding:
-```bash
-twinshare remote vm-stop --peer 192.168.1.100 --name test-vm --force
-```
-
-### Delete a Remote VM
-
-```bash
-twinshare remote vm-delete --peer <peer_address> --name <vm_name> [--force]
-```
-
-Example:
-```bash
-twinshare remote vm-delete --peer 192.168.1.100 --name test-vm
 ```
 
 ## Authentication

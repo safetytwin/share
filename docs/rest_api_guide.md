@@ -479,6 +479,10 @@ Returns information about a specific peer. The peer can be identified by its pee
 
 ### Remote VM Management
 
+The remote VM management endpoints allow you to manage virtual machines on remote peers in the P2P network.
+
+> **Note:** In all remote VM endpoints, the `peer_id` parameter can be a peer ID, hostname, or IP address of the remote peer.
+
 #### List Remote VMs
 
 ```
@@ -488,7 +492,7 @@ GET /api/remote/{peer_id}/vm
 Returns a list of virtual machines on a remote peer.
 
 **Path Parameters:**
-- `peer_id`: ID of the remote peer
+- `peer_id`: Peer ID, hostname, or IP address of the remote peer
 
 **Response:**
 
@@ -521,7 +525,7 @@ POST /api/remote/{peer_id}/vm
 Creates a new virtual machine on a remote peer.
 
 **Path Parameters:**
-- `peer_id`: ID of the remote peer
+- `peer_id`: Peer ID, hostname, or IP address of the remote peer
 
 **Request Body:**
 
@@ -569,7 +573,7 @@ POST /api/remote/{peer_id}/vm/{vm_id}/start
 Starts a virtual machine on a remote peer.
 
 **Path Parameters:**
-- `peer_id`: ID of the remote peer
+- `peer_id`: Peer ID, hostname, or IP address of the remote peer
 - `vm_id`: ID of the virtual machine
 
 **Response:**
@@ -593,7 +597,7 @@ POST /api/remote/{peer_id}/vm/{vm_id}/stop
 Stops a virtual machine on a remote peer.
 
 **Path Parameters:**
-- `peer_id`: ID of the remote peer
+- `peer_id`: Peer ID, hostname, or IP address of the remote peer
 - `vm_id`: ID of the virtual machine
 
 **Request Body (optional):**
@@ -628,7 +632,7 @@ DELETE /api/remote/{peer_id}/vm/{vm_id}
 Deletes a virtual machine on a remote peer.
 
 **Path Parameters:**
-- `peer_id`: ID of the remote peer
+- `peer_id`: Peer ID, hostname, or IP address of the remote peer
 - `vm_id`: ID of the virtual machine
 
 **Request Body (optional):**

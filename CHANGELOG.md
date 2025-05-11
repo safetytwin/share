@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.38] - 2025-05-11
+
+### Added
+- Changes in Dockerfile
+- Changes in docker-entrypoint.sh
+- Changes in docs/p2p_networking.md
+- Changes in docs/rest_api_guide.md
+- Changes in docs/vm_sharing_guide.md
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+
+### Changed
+- Changes in test-p2p.sh
+
 ## [0.1.37] - 2025-05-11
 
 ### Added

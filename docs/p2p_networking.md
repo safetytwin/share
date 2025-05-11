@@ -65,23 +65,20 @@ twinshare p2p list
 ### Remote VM Management
 
 ```bash
-# List VMs on a remote node
-twinshare remote vm-list --peer <hostname_or_ip>
+# List VMs on a remote peer
+twinshare remote vm-list --peer <peer_id_or_hostname_or_ip>
 
-# Get information about a specific VM on a remote node
-twinshare remote vm-info --peer <hostname_or_ip> --name <vm_name>
+# Create a VM on a remote peer
+twinshare remote vm-create --peer <peer_id_or_hostname_or_ip> --name <vm_name> --image <image> --memory <memory_mb> --disk <disk_gb>
 
-# Create a VM on a remote node
-twinshare remote vm-create --peer <hostname_or_ip> --name <vm_name> [options]
+# Start a VM on a remote peer
+twinshare remote vm-start --peer <peer_id_or_hostname_or_ip> --name <vm_name>
 
-# Start a VM on a remote node
-twinshare remote vm-start --peer <hostname_or_ip> --name <vm_name>
+# Stop a VM on a remote peer
+twinshare remote vm-stop --peer <peer_id_or_hostname_or_ip> --name <vm_name>
 
-# Stop a VM on a remote node
-twinshare remote vm-stop --peer <hostname_or_ip> --name <vm_name>
-
-# Delete a VM on a remote node
-twinshare remote vm-delete --peer <hostname_or_ip> --name <vm_name>
+# Delete a VM on a remote peer
+twinshare remote vm-delete --peer <peer_id_or_hostname_or_ip> --name <vm_name>
 ```
 
 ## Configuration

@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  twinshare-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: twinshare-server
+    hostname: twinshare-server
+    volumes:
+      - ./data/server:/data
+    environment:
+      - TWINSHARE_NODE_TYPE=server
+    ports:
+      - "37777:37777/udp"  # P2P discovery
+      - "37778:37778"      # P2P network
+      - "37780:37780"      # REST API
+    networks:
+      twinshare-net:
+        ipv4_address: 172.28.0.2
+
+  twinshare-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: twinshare-client
+    hostname: twinshare-client
+    volumes:
+      - ./data/client:/data
+    environment:
+      - TWINSHARE_NODE_TYPE=client
+    networks:
+      twinshare-net:
+        ipv4_address: 172.28.0.3
+    depends_on:
+      - twinshare-server
+
+networks:
+  twinshare-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
