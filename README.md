@@ -10,12 +10,14 @@ kompleksowe rozwiązanie do zarządzania, udostępniania i klonowania środowisk
 3. **Przewodnik testowania** - Metodologia i scenariusze testowe dla deweloperów
 4. **Instalacja i konfiguracja** - Szczegółowe instrukcje instalacji i konfiguracji na różnych platformach
 5. **Prompty dla dalszego rozwoju** - Gotowe prompty do generowania kolejnych modułów systemu
+6. **[REST API Guide](docs/rest_api_guide.md)** - Kompletna dokumentacja REST API
 
 ## Kluczowe moduły zaimplementowane
 
 1. **P2P Discovery** - Moduł automatycznego wykrywania węzłów w sieci lokalnej
 2. **Core Workspace** - Podstawowy model danych dla workspace'ów, projektów i środowisk
-3. **API Server** - REST API do zarządzania systemem
+3. **REST API Server** - Pełne REST API do zarządzania systemem, VM i P2P
+4. **REST API Client** - Biblioteka kliencka do integracji z API
 
 ## Unikalne cechy rozwiązania
 
@@ -24,6 +26,104 @@ kompleksowe rozwiązanie do zarządzania, udostępniania i klonowania środowisk
 3. **Wieloplatformowość** - Wsparcie dla różnych systemów operacyjnych i środowisk wykonawczych
 4. **One-Click Deployment** - Możliwość sklonowania środowiska jednym kliknięciem
 5. **Automatyczna adaptacja** - Dostosowanie do dostępnych zasobów sprzętowych
+6. **REST API** - Pełne REST API do integracji z zewnętrznymi systemami
+
+## Instalacja
+
+### Automatyczna instalacja
+
+Użyj skryptu instalacyjnego, który zainstaluje wszystkie wymagane zależności i skonfiguruje usługi:
+
+```bash
+# Pełna instalacja
+./install.sh
+
+# Instalacja z pominięciem zależności systemowych
+./install.sh --skip-system-deps
+
+# Instalacja z pominięciem usługi systemowej
+./install.sh --skip-service-install
+
+# Instalacja w trybie nieinteraktywnym
+./install.sh --non-interactive
+```
+
+### Ręczna instalacja
+
+1. Zainstaluj wymagane zależności systemowe:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip python3-venv libvirt-dev pkg-config \
+    libvirt-daemon libvirt-daemon-system qemu-kvm bridge-utils virtinst \
+    libvirt-clients build-essential python3-dev
+
+# Fedora/CentOS/RHEL
+sudo dnf update -y
+sudo dnf install -y python3 python3-pip python3-virtualenv libvirt-devel \
+    pkgconfig libvirt libvirt-daemon-kvm qemu-kvm bridge-utils \
+    virt-install libvirt-client gcc python3-devel
+```
+
+2. Utwórz i aktywuj wirtualne środowisko Python:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. Zainstaluj zależności Pythona:
+
+```bash
+pip install -e .
+```
+
+## Uruchomienie REST API
+
+### Jako usługa systemowa
+
+1. Zainstaluj usługę:
+
+```bash
+# Utwórz katalogi dla logów i PID
+sudo mkdir -p /var/log/safetytwin /var/run/safetytwin
+
+# Skopiuj plik usługi
+sudo cp scripts/safetytwin-rest-api.service /etc/systemd/system/
+
+# Załaduj konfigurację systemd
+sudo systemctl daemon-reload
+
+# Włącz usługę do autostartu
+sudo systemctl enable safetytwin-rest-api
+
+# Uruchom usługę
+sudo systemctl start safetytwin-rest-api
+
+# Sprawdź status
+sudo systemctl status safetytwin-rest-api
+```
+
+### Ręczne uruchomienie
+
+```bash
+# Uruchom w trybie foreground
+python scripts/start_rest_api.py start --foreground
+
+# Uruchom jako daemon
+python scripts/start_rest_api.py start
+
+# Sprawdź status
+python scripts/start_rest_api.py status
+
+# Zatrzymaj
+python scripts/start_rest_api.py stop
+```
+
+## Przykłady użycia REST API
+
+Zobacz [przykłady użycia REST API](examples/rest_api_usage.py) oraz [dokumentację REST API](docs/rest_api_guide.md).
 
 ## Kolejne kroki
 
@@ -188,4 +288,3 @@ Stworzenie rozwiązania umożliwiającego proste udostępnianie i klonowanie got
 - Wsparcie dla skryptów niestandardowych
 - Możliwość dodawania własnych szablonów środowisk
 - Integracja z dodatkowymi narzędziami AI
-
