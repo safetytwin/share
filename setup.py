@@ -7,19 +7,21 @@ from setuptools import setup, find_packages
 
 setup(
     name="twinshare",
-    version="0.1.16",
+    version="0.1.15",
     description="Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM",
     author="Tom Sapletta",
     packages=find_packages(),
     install_requires=[
-        "libvirt-python",
-        "aiohttp",
-        "asyncio",
-        "tabulate",
-        "pyyaml",
-        "cryptography",
-        "python-daemon",
-        "netifaces"
+        "libvirt-python>=8.0.0",
+        "aiohttp[speedups]<4.0.0,>=3.8.0",
+        "aiohttp-cors>=0.7.0",
+        "asyncio>=3.4.3",
+        "tabulate>=0.9.0",
+        "pyyaml>=6.0",
+        "cryptography>=40.0.0",
+        "python-daemon>=3.0.0",
+        "netifaces>=0.11.0",
+        "zeroconf>=0.38.0"
     ],
     scripts=["bin/twinshare"],
     entry_points={
@@ -37,4 +39,18 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
+    package_data={
+        "src": ["**/*.json", "**/*.yaml", "**/*.yml"],
+    },
+    extras_require={
+        "dev": [
+            "pytest>=7.0.0",
+            "black>=23.0.0",
+            "isort>=5.12.0",
+            "mypy>=1.0.0"
+        ],
+        "windows": [
+            "virtualbox>=7.0.0"
+        ]
+    }
 )
