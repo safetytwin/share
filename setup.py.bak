@@ -11,7 +11,8 @@ setup(
     version="0.1.19",
     description="Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM",
     author="Tom Sapletta",
-    packages=find_packages(include=["src", "src.*"]),
+    packages=find_packages(),
+    package_dir={"": "."},
     install_requires=[
         "libvirt-python>=8.0.0",
         "aiohttp[speedups]<4.0.0,>=3.8.0",

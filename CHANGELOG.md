@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.23] - 2025-05-11
+
+### Added
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/cli/__init__.py
+- Changes in src/cli/main.py
+
 ## [0.1.22] - 2025-05-11
 
 ### Added
