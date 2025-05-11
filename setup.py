@@ -6,9 +6,9 @@ setup.py
 from setuptools import setup, find_packages
 
 setup(
-    name="safeytwinshare",
-    version="0.1.1",
-    description="AI Environment Manager - narzędzie do zarządzania środowiskami AI",
+    name="twinshare",
+    version="0.1.5",
+    description="Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM",
     author="Tom Sapletta",
     packages=find_packages(),
     install_requires=[

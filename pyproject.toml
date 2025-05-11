@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=64.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "twinshare"
+version = "0.1.5"
+description = "Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM"
+authors = [
+    {name = "Tom Sapletta"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+
+dependencies = [
+    "libvirt-python",
+    "aiohttp<4.0.0,>=3.8.0",
+    "aiohttp-cors>=0.7.0",
+    "asyncio",
+    "tabulate",
+    "pyyaml",
+    "cryptography",
+    "python-daemon>=3.0.0",
+    "netifaces"
+]
+
+[project.scripts]
+safetytwin = "src.cli.main:main"
+
+[tool.setuptools]
+packages = ["src"]
