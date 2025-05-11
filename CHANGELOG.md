@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.42] - 2025-05-11
+
+### Added
+- Changes in .gitignore
+- Changes in CHANGELOG.md
+- Changes in ansible/inventory.yml
+- Changes in ansible/playbook.yml
+- Changes in p2p_test.py
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in run_terraform_ansible_test.sh
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in terraform/main.tf
+- Changes in terraform/terraform.tfstate
+
+### Changed
+- Changes in terraform/.terraform.tfstate.lock.info
+
+## [0.1.41] - 2025-05-11
+
+### Added
+- Changes in ansible/inventory.yml
+- Changes in p2p_test.py
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in run_terraform_ansible_test.sh
+- Changes in setup.py
+- Changes in setup.py.bak
+
 ## [0.1.40] - 2025-05-11
 
 ### Added

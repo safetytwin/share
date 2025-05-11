@@ -1,0 +1,17 @@
+---
+all:
+  children:
+    twinshare_nodes:
+      children:
+        servers:
+          hosts:
+            twinshare-server:
+              ansible_connection: docker
+              ansible_host: 172.30.0.2
+        clients:
+          hosts:
+            twinshare-client:
+              ansible_connection: docker
+              ansible_host: 172.30.0.3
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

@@ -1,0 +1,142 @@
+---
+- name: Setup TwinShare P2P Test Environment
+  hosts: twinshare_nodes
+  gather_facts: no
+  tasks:
+    - name: Wait for containers to be ready
+      wait_for_connection:
+        timeout: 30
+      register: connection_result
+      ignore_errors: yes
+      
+    - name: Report connection status
+      debug:
+        msg: "Connection to {{ inventory_hostname }} {{ 'successful' if connection_result is succeeded else 'failed' }}"
+      
+    - name: Gather facts if connection is successful
+      setup:
+      when: connection_result is succeeded
+      
+    - name: Ensure Python dependencies are installed
+      pip:
+        name: 
+          - zeroconf
+          - netifaces
+        state: present
+      become: yes
+      when: connection_result is succeeded
+
+    - name: Check P2P service status
+      command: ps aux | grep p2p_test.py | grep -v grep
+      register: p2p_status
+      changed_when: false
+      ignore_errors: yes
+      when: connection_result is succeeded
+
+    - name: Display P2P service status
+      debug:
+        msg: "P2P service is {{ 'running' if p2p_status.rc == 0 else 'not running' }}"
+      when: connection_result is succeeded
+
+- name: Configure Server Node
+  hosts: servers
+  gather_facts: no
+  tasks:
+    - name: Wait for server to be ready
+      wait_for_connection:
+        timeout: 30
+      register: server_connection
+      ignore_errors: yes
+      
+    - name: Ensure server configuration directory exists
+      file:
+        path: /data/config
+        state: directory
+      when: server_connection is succeeded
+
+    - name: Create server configuration file
+      copy:
+        dest: /data/config/p2p_config.json
+        content: |
+          {
+            "node_type": "server",
+            "discovery_port": 47777,
+            "network_port": 47778,
+            "log_level": "INFO"
+          }
+      when: server_connection is succeeded
+
+- name: Configure Client Node
+  hosts: clients
+  gather_facts: no
+  tasks:
+    - name: Wait for client to be ready
+      wait_for_connection:
+        timeout: 30
+      register: client_connection
+      ignore_errors: yes
+      
+    - name: Ensure client configuration directory exists
+      file:
+        path: /data/config
+        state: directory
+      when: client_connection is succeeded
+
+    - name: Create client configuration file
+      copy:
+        dest: /data/config/p2p_config.json
+        content: |
+          {
+            "node_type": "client",
+            "discovery_port": 47777,
+            "network_port": 47778,
+            "log_level": "INFO",
+            "known_servers": ["twinshare-server"]
+          }
+      when: client_connection is succeeded
+
+- name: Run P2P Tests
+  hosts: clients
+  gather_facts: no
+  tasks:
+    - name: Wait for client to be ready
+      wait_for_connection:
+        timeout: 30
+      register: client_ready
+      ignore_errors: yes
+      
+    - name: Wait for server to be ready
+      wait_for:
+        host: "{{ hostvars['twinshare-server'].ansible_host }}"
+        port: 47778
+        timeout: 30
+      register: server_check
+      ignore_errors: yes
+      when: client_ready is succeeded
+
+    - name: Display server connection status
+      debug:
+        msg: "Server connection {{ 'successful' if server_check.failed == false else 'failed' }}"
+      when: client_ready is succeeded
+
+    - name: Test P2P connectivity
+      shell: ping -c 4 {{ hostvars['twinshare-server'].ansible_host }}
+      register: ping_result
+      ignore_errors: yes
+      when: client_ready is succeeded and server_check.failed == false
+
+    - name: Display ping results
+      debug:
+        msg: "{{ ping_result.stdout_lines | default(['Ping failed']) }}"
+      when: client_ready is succeeded and server_check.failed == false
+
+    - name: Collect P2P logs
+      shell: cat logs/p2p_test.log || echo "Log file not found"
+      register: log_output
+      ignore_errors: yes
+      when: client_ready is succeeded
+
+    - name: Display P2P logs
+      debug:
+        msg: "{{ log_output.stdout_lines | default(['No logs available']) }}"
+      when: client_ready is succeeded

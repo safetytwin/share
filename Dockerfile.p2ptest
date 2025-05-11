@@ -15,12 +15,15 @@ RUN apt-get update && apt-get install -y \
 # Install required Python packages
 RUN pip install zeroconf netifaces
 
+# Create logs directory
+RUN mkdir -p /app/logs && chmod 777 /app/logs
+
 # Copy the test script
 COPY p2p_test.py /app/
 RUN chmod +x /app/p2p_test.py
 
 # Expose P2P ports
-EXPOSE 37777/udp 37778
+EXPOSE 47777/udp 47778
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
