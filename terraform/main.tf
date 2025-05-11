@@ -22,49 +22,50 @@ resource "docker_network" "p2p_network" {
 
 # Create server container
 resource "docker_container" "twinshare_server" {
-  name  = "twinshare-server"
-  image = docker_image.twinshare_test.name
+  name     = "twinshare-server"
   hostname = "twinshare-server"
+  image    = docker_image.twinshare_test.image_id
+  
+  # Fix the command to not include the script path
+  command = ["--type", "server"]
+  
+  env = ["PYTHONUNBUFFERED=1"]
   
   networks_advanced {
-    name = docker_network.p2p_network.name
-    ipv4_address = "172.30.0.2"  # Updated IP to match new subnet
+    name         = docker_network.p2p_network.name
+    ipv4_address = "172.30.0.2"
   }
   
   ports {
-    internal = 37777
-    external = 47777  # Changed from 37777 to 47777
+    internal = 47777
+    external = 47777
     protocol = "udp"
+    ip       = "0.0.0.0"
   }
   
   ports {
-    internal = 37778
-    external = 47778  # Changed from 37778 to 47778
+    internal = 47778
+    external = 47778
+    protocol = "tcp"
+    ip       = "0.0.0.0"
   }
-  
-  command = ["/app/p2p_test.py", "--type", "server"]
-  
-  env = [
-    "PYTHONUNBUFFERED=1"
-  ]
 }
 
 # Create client container
 resource "docker_container" "twinshare_client" {
-  name  = "twinshare-client"
-  image = docker_image.twinshare_test.name
+  name     = "twinshare-client"
   hostname = "twinshare-client"
+  image    = docker_image.twinshare_test.image_id
+  
+  # Fix the command to not include the script path
+  command = ["--type", "client"]
+  
+  env = ["PYTHONUNBUFFERED=1"]
   
   networks_advanced {
-    name = docker_network.p2p_network.name
-    ipv4_address = "172.30.0.3"  # Updated IP to match new subnet
+    name         = docker_network.p2p_network.name
+    ipv4_address = "172.30.0.3"
   }
-  
-  command = ["/app/p2p_test.py", "--type", "client"]
-  
-  env = [
-    "PYTHONUNBUFFERED=1"
-  ]
   
   depends_on = [
     docker_container.twinshare_server
