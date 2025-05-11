@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="twinshare",
-    version="0.1.16",
+    version="0.1.17",
     description="Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM",
     author="Tom Sapletta",
     packages=find_packages(),

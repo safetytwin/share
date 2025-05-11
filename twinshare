@@ -1,4 +1,13 @@
 #!/bin/bash
-# Simple wrapper for twinshare command
-export PYTHONPATH="$HOME/github/safetytwin/share"
-python3 -m src.cli.main "$@"
+VENV_DIR="${HOME}/.twinshare_venv"
+PACKAGE_DIR="/home/tom/github/safetytwin/share"
+
+if [ -d "$VENV_DIR" ]; then
+    source "${VENV_DIR}/bin/activate"
+    
+    # Run the CLI module directly to avoid circular imports
+    PYTHONPATH="${PACKAGE_DIR}:${PYTHONPATH}" python -c "import sys; sys.path.insert(0, '${PACKAGE_DIR}'); from src.cli.main import main; sys.exit(main())" "$@"
+else
+    echo "Error: twinshare virtual environment not found. Please reinstall the package."
+    exit 1
+fi

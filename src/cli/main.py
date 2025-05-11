@@ -14,9 +14,21 @@ import sys
 from pathlib import Path
 
 # Dodaj katalog nadrzędny do ścieżki, aby umożliwić importowanie modułów
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+parent_dir = str(Path(__file__).resolve().parent.parent.parent)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
-from src.cli.commands import main
+# Import commands module directly to avoid circular imports
+from src.cli.commands import CLI
+
+
+def main():
+    """
+    Funkcja główna dla interfejsu wiersza poleceń.
+    """
+    cli = CLI()
+    return cli.run()
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
