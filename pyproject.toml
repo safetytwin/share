@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "twinshare"
-version = "0.1.19"
+version = "0.1.20"
 description = "Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM"
 authors = [
     {name = "Tom Sapletta"}
@@ -38,7 +38,12 @@ dependencies = [
 twinshare = "src.cli.main:main"
 
 [tool.setuptools]
-packages = ["src"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+exclude = ["tests*"]
 
 [tool.setuptools.package-data]
 "src" = ["**/*.json", "**/*.yaml", "**/*.yml"]
@@ -51,5 +56,5 @@ dev = [
     "mypy>=1.0.0"
 ]
 windows = [
-    "virtualbox>=7.0.0"
+    "pywin32>=300"
 ]

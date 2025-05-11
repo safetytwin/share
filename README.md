@@ -30,9 +30,24 @@ kompleksowe rozwiązanie do zarządzania, udostępniania i klonowania środowisk
 
 ## Instalacja
 
-### Instalacja na nowym systemie
+### Instalacja bezpośrednio z PyPI
 
-Aby zainstalować twinshare na nowym systemie, użyj dedykowanego skryptu `install_package.sh`:
+Najłatwiejszym sposobem instalacji jest użycie pip do zainstalowania pakietu bezpośrednio z PyPI:
+
+```bash
+pip install twinshare
+```
+
+Po instalacji, komenda `twinshare` będzie dostępna bezpośrednio w terminalu:
+
+```bash
+# Sprawdź dostępne komendy
+twinshare --help
+```
+
+### Instalacja na nowym systemie z repozytorium
+
+Aby zainstalować twinshare z repozytorium, użyj dedykowanego skryptu `install_package.sh`:
 
 ```bash
 # Sklonuj repozytorium

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Skrypt instalacyjny
 """
 setup.py
@@ -7,10 +8,10 @@ from setuptools import setup, find_packages
 
 setup(
     name="twinshare",
-    version="0.1.17",
+    version="0.1.18",
     description="Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM",
     author="Tom Sapletta",
-    packages=find_packages(),
+    packages=find_packages(include=["src", "src.*"]),
     install_requires=[
         "libvirt-python>=8.0.0",
         "aiohttp[speedups]<4.0.0,>=3.8.0",
@@ -23,7 +24,6 @@ setup(
         "netifaces>=0.11.0",
         "zeroconf>=0.38.0"
     ],
-    scripts=["bin/twinshare"],
     entry_points={
         "console_scripts": [
             "twinshare=src.cli.main:main",
@@ -50,7 +50,8 @@ setup(
             "mypy>=1.0.0"
         ],
         "windows": [
-            "virtualbox>=7.0.0"
+            "pywin32>=300"
         ]
-    }
+    },
+    include_package_data=True,
 )
