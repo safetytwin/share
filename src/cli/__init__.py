@@ -9,4 +9,4 @@ kontenerami i innymi zasobami w środowisku AI Environment Manager.
 
 from .commands import main
 
-__all__ = ['main']
+__all__ = ["main"]

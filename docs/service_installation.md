@@ -138,7 +138,9 @@ Common issues include:
    ExecStart=/path/to/safetytwin/share/venv/bin/python3 /path/to/safetytwin/share/scripts/start_rest_api.py start --log-file /var/log/safetytwin/rest_api.log --pid-file /var/run/safetytwin/rest_api.pid
    ```
 
-4. **Module import errors**: If you see "ModuleNotFoundError: No module named 'daemon'" in the logs, it means the `python-daemon` package is not installed. Install it with:
+4. **Module import errors**: 
+
+   a. **Missing python-daemon**: If you see "ModuleNotFoundError: No module named 'daemon'" in the logs, it means the `python-daemon` package is not installed. Install it with:
 
    ```bash
    # Activate the virtual environment
@@ -149,6 +151,29 @@ Common issues include:
    
    # Deactivate the virtual environment
    deactivate
+   ```
+
+   b. **aiohttp.web import error**: If you see "AttributeError: module aiohttp has no attribute web" in the logs, it means there's an import issue with the aiohttp package. This can be fixed by:
+
+   1. Making sure you have the correct version of aiohttp installed:
+   
+   ```bash
+   source /path/to/safetytwin/share/venv/bin/activate
+   pip install "aiohttp[speedups]<4.0.0,>=3.8.0" aiohttp-cors>=0.7.0
+   deactivate
+   ```
+   
+   2. Updating the import statement in the network.py file:
+   
+   ```python
+   # Change this:
+   import aiohttp
+   # ...and later using aiohttp.web
+   
+   # To this:
+   import aiohttp
+   from aiohttp import web
+   # ...and later using just web
    ```
 
 5. **Permission problems**: Ensure the user specified in the service file has the necessary permissions to run the REST API.
