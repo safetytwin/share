@@ -14,7 +14,6 @@ services:
     ports:
       - "37777:37777/udp"  # P2P discovery
       - "37778:37778"      # P2P network
-      - "37780:37780"      # REST API
     networks:
       twinshare-net:
         ipv4_address: 172.28.0.2

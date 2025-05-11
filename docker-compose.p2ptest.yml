@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  p2p-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.p2ptest
+    container_name: p2p-server
+    hostname: twinshare-server
+    command: ["--type", "server"]
+    ports:
+      - "37777:37777/udp"  # P2P discovery
+      - "37778:37778"      # P2P network
+    networks:
+      p2p-net:
+        ipv4_address: 172.28.0.2
+
+  p2p-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.p2ptest
+    container_name: p2p-client
+    hostname: twinshare-client
+    command: ["--type", "client"]
+    networks:
+      p2p-net:
+        ipv4_address: 172.28.0.3
+    depends_on:
+      - p2p-server
+
+networks:
+  p2p-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

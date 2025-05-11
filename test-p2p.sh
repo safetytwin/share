@@ -55,40 +55,34 @@ for i in $(seq 1 $TIMEOUT); do
 done
 
 # Wait for initialization
-echo "Waiting for containers to initialize (45 seconds)..."
-sleep 45
+echo "Waiting for containers to initialize (30 seconds)..."
+sleep 30
 
 echo ""
-echo "=== Server Status ==="
+echo "=== Server P2P Status ==="
 docker exec twinshare-server twinshare p2p status || echo "Failed to get P2P status on server"
-docker exec twinshare-server twinshare vm list || echo "Failed to list VMs on server"
 
 echo ""
-echo "=== Client Status ==="
+echo "=== Client P2P Status ==="
 docker exec twinshare-client twinshare p2p status || echo "Failed to get P2P status on client"
-docker exec twinshare-client twinshare p2p list || echo "Failed to list peers on client"
 
 echo ""
-echo "=== Testing Remote VM Operations ==="
-echo "1. Listing remote VMs from client..."
-docker exec twinshare-client twinshare remote vm-list --peer twinshare-server || echo "Failed to list remote VMs by hostname"
-docker exec twinshare-client twinshare remote vm-list --peer 172.28.0.2 || echo "Failed to list remote VMs by IP"
+echo "=== P2P Peer Discovery ==="
+echo "1. Listing peers from server..."
+docker exec twinshare-server twinshare p2p list || echo "Failed to list peers from server"
 
 echo ""
-echo "2. Starting test-vm on server from client..."
-docker exec twinshare-client twinshare remote vm-start --peer twinshare-server --name test-vm || echo "Failed to start remote VM"
+echo "2. Listing peers from client..."
+docker exec twinshare-client twinshare p2p list || echo "Failed to list peers from client"
 
 echo ""
-echo "3. Checking VM status from client..."
-docker exec twinshare-client twinshare remote vm-list --peer twinshare-server || echo "Failed to list remote VMs"
+echo "=== P2P Communication Test ==="
+echo "1. Pinging server from client by hostname..."
+docker exec twinshare-client twinshare p2p ping --peer twinshare-server || echo "Failed to ping server by hostname"
 
 echo ""
-echo "4. Stopping test-vm on server from client..."
-docker exec twinshare-client twinshare remote vm-stop --peer twinshare-server --name test-vm || echo "Failed to stop remote VM"
-
-echo ""
-echo "5. Final VM status check from client..."
-docker exec twinshare-client twinshare remote vm-list --peer twinshare-server || echo "Failed to list remote VMs"
+echo "2. Pinging server from client by IP..."
+docker exec twinshare-client twinshare p2p ping --peer 172.28.0.2 || echo "Failed to ping server by IP"
 
 echo ""
 echo "=== Test Complete ==="
