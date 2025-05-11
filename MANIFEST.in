@@ -1,6 +1,7 @@
 include README.md
 include LICENSE
 include requirements.txt
+include twinshare_cli.py
 recursive-include src *.py
 recursive-include src *.json
 recursive-include src *.yaml

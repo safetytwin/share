@@ -766,8 +766,16 @@ class CLI:
 
 def main() -> None:
     """Funkcja główna CLI"""
-    cli = CLI()
-    asyncio.run(cli.run())
+    try:
+        cli = CLI()
+        asyncio.run(cli.run())
+    except ImportError as e:
+        print(f"Błąd importu: {e}")
+        print("Sprawdź czy wszystkie zależności są zainstalowane.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Wystąpił błąd: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

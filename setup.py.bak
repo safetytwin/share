@@ -13,6 +13,7 @@ setup(
     author="Tom Sapletta",
     packages=find_packages(),
     package_dir={"": "."},
+    py_modules=["twinshare_cli"],
     install_requires=[
         "libvirt-python>=8.0.0",
         "aiohttp[speedups]<4.0.0,>=3.8.0",
@@ -27,7 +28,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "twinshare=src.cli.main:main",
+            "twinshare=twinshare_cli:main",
         ],
     },
     python_requires=">=3.8",

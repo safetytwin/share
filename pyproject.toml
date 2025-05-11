@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "twinshare"
-version = "0.1.22"
+version = "0.1.23"
 description = "Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM"
 authors = [
     {name = "Tom Sapletta"}
@@ -35,10 +35,11 @@ dependencies = [
 ]
 
 [project.scripts]
-twinshare = "src.cli.main:main"
+twinshare = "twinshare_cli:main"
 
 [tool.setuptools]
 include-package-data = true
+py-modules = ["twinshare_cli"]
 
 [tool.setuptools.packages.find]
 where = ["."]
