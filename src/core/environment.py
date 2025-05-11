@@ -1,0 +1,5 @@
+# Model środowiska
+"""
+environment.py
+"""
+

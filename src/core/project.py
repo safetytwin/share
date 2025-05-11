@@ -1,0 +1,5 @@
+# Model projektu
+"""
+project.py
+"""
+

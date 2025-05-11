@@ -1,0 +1,19 @@
+[Unit]
+Description=SafetyTwin REST API Server
+After=network.target
+
+[Service]
+Type=forking
+User=$USER
+Group=$USER
+WorkingDirectory=/home/tom/github/safetytwin/share
+Environment="PYTHONPATH=/home/tom/github/safetytwin/share"
+ExecStartPre=/bin/mkdir -p /var/log/safetytwin /var/run/safetytwin
+ExecStart=/home/tom/github/safetytwin/share/venv/bin/python3 /home/tom/github/safetytwin/share/scripts/start_rest_api.py start --log-file /var/log/safetytwin/rest_api.log --pid-file /var/run/safetytwin/rest_api.pid
+ExecStop=/home/tom/github/safetytwin/share/venv/bin/python3 /home/tom/github/safetytwin/share/scripts/start_rest_api.py stop --pid-file /var/run/safetytwin/rest_api.pid
+PIDFile=/var/run/safetytwin/rest_api.pid
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
