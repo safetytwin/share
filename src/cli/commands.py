@@ -234,7 +234,7 @@ class CLI:
         )
 
         remote_vm_list_parser.add_argument(
-            "peer_id", type=str, help="Identyfikator węzła docelowego"
+            "--peer", type=str, required=True, help="Adres węzła docelowego"
         )
 
         remote_vm_list_parser.add_argument(
@@ -250,7 +250,7 @@ class CLI:
         )
 
         remote_vm_create_parser.add_argument(
-            "peer_id", type=str, help="Identyfikator węzła docelowego"
+            "--peer", type=str, required=True, help="Adres węzła docelowego"
         )
 
         remote_vm_create_parser.add_argument(
@@ -282,7 +282,7 @@ class CLI:
         )
 
         remote_vm_start_parser.add_argument(
-            "peer_id", type=str, help="Identyfikator węzła docelowego"
+            "--peer", type=str, required=True, help="Adres węzła docelowego"
         )
 
         remote_vm_start_parser.add_argument(
@@ -295,7 +295,7 @@ class CLI:
         )
 
         remote_vm_stop_parser.add_argument(
-            "peer_id", type=str, help="Identyfikator węzła docelowego"
+            "--peer", type=str, required=True, help="Adres węzła docelowego"
         )
 
         remote_vm_stop_parser.add_argument(
@@ -314,7 +314,7 @@ class CLI:
         )
 
         remote_vm_delete_parser.add_argument(
-            "peer_id", type=str, help="Identyfikator węzła docelowego"
+            "--peer", type=str, required=True, help="Adres węzła docelowego"
         )
 
         remote_vm_delete_parser.add_argument(
@@ -323,6 +323,47 @@ class CLI:
 
         remote_vm_delete_parser.add_argument(
             "--keep-disk", action="store_true", help="Zachowuje dysk maszyny wirtualnej"
+        )
+
+        # Komenda: workspace
+        workspace_parser = subparsers.add_parser(
+            "workspace", help="Zarządzanie przestrzeniami roboczymi"
+        )
+
+        workspace_subparsers = workspace_parser.add_subparsers(
+            dest="workspace_command",
+            title="Komendy Workspace",
+            help="Komenda Workspace do wykonania",
+        )
+
+        # Komenda: workspace list
+        workspace_list_parser = workspace_subparsers.add_parser(
+            "list", help="Listuje dostępne przestrzenie robocze"
+        )
+
+        workspace_list_parser.add_argument(
+            "--format",
+            choices=["table", "json", "yaml"],
+            default="table",
+            help="Format wyjścia (domyślnie: table)",
+        )
+
+        # Komenda: workspace share
+        workspace_share_parser = workspace_subparsers.add_parser(
+            "share", help="Udostępnia przestrzeń roboczą"
+        )
+
+        workspace_share_parser.add_argument(
+            "--name", type=str, required=True, help="Nazwa przestrzeni roboczej"
+        )
+
+        # Komenda: workspace unshare
+        workspace_unshare_parser = workspace_subparsers.add_parser(
+            "unshare", help="Wyłącza udostępnianie przestrzeni roboczej"
+        )
+
+        workspace_unshare_parser.add_argument(
+            "--name", type=str, required=True, help="Nazwa przestrzeni roboczej"
         )
 
         return parser
@@ -512,12 +553,12 @@ class CLI:
             try:
                 # Utwórz wiadomość
                 message = VMListMessage(
-                    sender_id=discovery.peer_id, receiver_id=args.peer_id
+                    sender_id=discovery.peer_id, receiver_id=args.peer
                 )
 
                 # Wyślij wiadomość
                 response = await network.send_message(
-                    peer_id=args.peer_id, message_type=message.type, data=message.data
+                    peer_id=args.peer, message_type=message.type, data=message.data
                 )
 
                 if response:
@@ -540,12 +581,12 @@ class CLI:
                     memory=args.memory,
                     disk_size=args.disk,
                     sender_id=discovery.peer_id,
-                    receiver_id=args.peer_id,
+                    receiver_id=args.peer,
                 )
 
                 # Wyślij wiadomość
                 response = await network.send_message(
-                    peer_id=args.peer_id, message_type=message.type, data=message.data
+                    peer_id=args.peer, message_type=message.type, data=message.data
                 )
 
                 if response:
@@ -569,12 +610,12 @@ class CLI:
                 message = VMStartMessage(
                     vm_id=args.vm_id,
                     sender_id=discovery.peer_id,
-                    receiver_id=args.peer_id,
+                    receiver_id=args.peer,
                 )
 
                 # Wyślij wiadomość
                 response = await network.send_message(
-                    peer_id=args.peer_id, message_type=message.type, data=message.data
+                    peer_id=args.peer, message_type=message.type, data=message.data
                 )
 
                 if response:
@@ -598,12 +639,12 @@ class CLI:
                     vm_id=args.vm_id,
                     force=args.force,
                     sender_id=discovery.peer_id,
-                    receiver_id=args.peer_id,
+                    receiver_id=args.peer,
                 )
 
                 # Wyślij wiadomość
                 response = await network.send_message(
-                    peer_id=args.peer_id, message_type=message.type, data=message.data
+                    peer_id=args.peer, message_type=message.type, data=message.data
                 )
 
                 if response:
@@ -627,12 +668,12 @@ class CLI:
                     vm_id=args.vm_id,
                     delete_disk=not args.keep_disk,
                     sender_id=discovery.peer_id,
-                    receiver_id=args.peer_id,
+                    receiver_id=args.peer,
                 )
 
                 # Wyślij wiadomość
                 response = await network.send_message(
-                    peer_id=args.peer_id, message_type=message.type, data=message.data
+                    peer_id=args.peer, message_type=message.type, data=message.data
                 )
 
                 if response:
@@ -652,6 +693,47 @@ class CLI:
         else:
             print("Nieznana komenda zdalna")
             sys.exit(1)
+
+    async def _handle_workspace_command(self, args: argparse.Namespace) -> None:
+        """
+        Obsługuje komendy związane z przestrzeniami roboczymi.
+
+        Args:
+            args: Argumenty wiersza poleceń
+        """
+        if args.workspace_command == "list":
+            # Implementacja listowania przestrzeni roboczych
+            # Na razie zwracamy pustą listę
+            workspaces = []
+            print(self._format_output(workspaces, args.format))
+        elif args.workspace_command == "share":
+            # Implementacja udostępniania przestrzeni roboczej
+            workspace_name = args.name
+
+            # Wywołanie API do udostępnienia workspace'a
+            try:
+                # W rzeczywistej implementacji, wywołaj odpowiednie API
+                # Na razie tylko logujemy akcję
+                logger.info(f"Udostępniono workspace '{workspace_name}'")
+                print(f"Workspace '{workspace_name}' został udostępniony")
+            except Exception as e:
+                logger.error(f"Błąd podczas udostępniania workspace'a: {e}")
+                print(f"Błąd: {e}")
+        elif args.workspace_command == "unshare":
+            # Implementacja wyłączania udostępniania przestrzeni roboczej
+            workspace_name = args.name
+
+            # Wywołanie API do wyłączenia udostępnienia workspace'a
+            try:
+                # W rzeczywistej implementacji, wywołaj odpowiednie API
+                # Na razie tylko logujemy akcję
+                logger.info(f"Wyłączono udostępnianie workspace'a '{workspace_name}'")
+                print(f"Wyłączono udostępnianie workspace'a '{workspace_name}'")
+            except Exception as e:
+                logger.error(f"Błąd podczas wyłączania udostępniania workspace'a: {e}")
+                print(f"Błąd: {e}")
+        else:
+            print("Nieznana komenda workspace")
 
     async def run(self, args: Optional[List[str]] = None) -> None:
         """
@@ -676,6 +758,8 @@ class CLI:
             await self._handle_p2p_command(parsed_args)
         elif parsed_args.command == "remote":
             await self._handle_remote_command(parsed_args)
+        elif parsed_args.command == "workspace":
+            await self._handle_workspace_command(parsed_args)
         else:
             self.parser.print_help()
 

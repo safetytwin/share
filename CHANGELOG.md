@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.13] - 2025-05-11
+
+### Added
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+- Changes in src/cli/commands.py
+
+### Changed
+- Changes in run_api_direct.py
+
 ## [0.1.12] - 2025-05-11
 
 ### Added
