@@ -8,6 +8,7 @@ umożliwiając zarządzanie maszynami wirtualnymi, siecią P2P i innymi
 zasobami w środowisku AI Environment Manager.
 """
 
+import asyncio
 import importlib.util
 import logging
 import os
@@ -46,7 +47,7 @@ def main():
     Funkcja główna dla interfejsu wiersza poleceń.
     """
     cli = CLI()
-    return cli.run()
+    return asyncio.run(cli.run())
 
 
 if __name__ == "__main__":
