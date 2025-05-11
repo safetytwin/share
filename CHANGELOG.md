@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.47] - 2025-05-11
+
+### Added
+- Changes in CHANGELOG.md
+- Changes in p2p_test.py
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in setup.py
+- Changes in setup.py.bak
+
+## [0.1.46] - 2025-05-11
+
+### Added
+- Changes in .gitignore
+- Changes in Dockerfile.p2ptest
+- Changes in pyproject.toml
+- Changes in pyproject.toml.bak
+- Changes in run_terraform_ansible_test.sh
+- Changes in setup.py
+- Changes in setup.py.bak
+
 ## [0.1.45] - 2025-05-11
 
 ### Added
@@ -21,44 +42,32 @@ All notable changes to this project will be documented in this file.
 - Changes in setup.py
 - Changes in setup.py.bak
 
-## [0.1.43] - 2025-05-11
+## [0.1.43] - 2023-05-11
+### Fixed
+- Fixed P2P discovery in Docker network by adding manual peer discovery
+- Updated Dockerfile.p2ptest to correctly specify TCP port for 47778
+- Added Ansible configuration to fix permission issues with temporary directories
+- Improved run script to use temporary directories for Terraform state files
+- Fixed zeroconf service browser implementation for better peer discovery
 
-### Added
-- Changes in p2p_test.py
-- Changes in pyproject.toml
-- Changes in pyproject.toml.bak
-- Changes in setup.py
-- Changes in setup.py.bak
-
-## [0.1.42] - 2025-05-11
-
-### Added
-- Changes in .gitignore
-- Changes in CHANGELOG.md
-- Changes in ansible/inventory.yml
-- Changes in ansible/playbook.yml
-- Changes in p2p_test.py
-- Changes in pyproject.toml
-- Changes in pyproject.toml.bak
-- Changes in run_terraform_ansible_test.sh
-- Changes in setup.py
-- Changes in setup.py.bak
-- Changes in terraform/main.tf
-- Changes in terraform/terraform.tfstate
-
+## [0.1.42] - 2023-05-10
 ### Changed
-- Changes in terraform/.terraform.tfstate.lock.info
-
-## [0.1.41] - 2025-05-11
+- Changed log file location from `/var/log/p2p_test.log` to `logs/p2p_test.log` to avoid permission issues
+- Updated port numbers from 37777/37778 to 47777/47778 across all configurations
+- Made dependencies (netifaces, zeroconf) optional with graceful fallbacks
+- Improved error handling in P2P test script
 
 ### Added
-- Changes in ansible/inventory.yml
-- Changes in p2p_test.py
-- Changes in pyproject.toml
-- Changes in pyproject.toml.bak
-- Changes in run_terraform_ansible_test.sh
-- Changes in setup.py
-- Changes in setup.py.bak
+- Added automatic creation of logs directory
+- Added main function to p2p_test.py for better structure
+- Added port conflict detection to run script
+
+## [0.1.41] - 2023-05-09
+### Added
+- Initial implementation of P2P testing infrastructure
+- Added Terraform configuration for Docker containers
+- Added Ansible playbook for test automation
+- Created Dockerfile for P2P test environment
 
 ## [0.1.40] - 2025-05-11
 
@@ -571,4 +580,3 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Changes in setup.py.bak
-

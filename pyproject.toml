@@ -3,9 +3,9 @@ requires = ["setuptools>=64.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "twinshare"
-version = "0.1.43"
-description = "Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM"
+name = "safetytwin-share"
+version = "0.1.44"
+description = "Safety Twin Share"
 authors = [
     {name = "Tom Sapletta"}
 ]

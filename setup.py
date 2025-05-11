@@ -7,8 +7,8 @@ setup.py
 from setuptools import setup, find_packages
 
 setup(
-    name="twinshare",
-    version="0.1.43",
+    name="safetytwin-share",
+    version="0.1.44",
     description="Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM",
     author="Tom Sapletta",
     packages=find_packages(),
