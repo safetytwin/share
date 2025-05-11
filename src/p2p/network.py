@@ -157,6 +157,15 @@ class P2PNetwork:
         self.register_handler("get_info", self._handle_get_info)
         self.register_handler("get_environments", self._handle_get_environments)
 
+        # Rejestracja handlerów dla operacji VM
+        self.register_handler("vm_list", self._handle_vm_list)
+        self.register_handler("vm_info", self._handle_vm_info)
+        self.register_handler("vm_create", self._handle_vm_create)
+        self.register_handler("vm_start", self._handle_vm_start)
+        self.register_handler("vm_stop", self._handle_vm_stop)
+        self.register_handler("vm_delete", self._handle_vm_delete)
+        self.register_handler("vm_status", self._handle_vm_status)
+
     async def _handle_ping(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Obsługuje żądanie ping"""
         return {
@@ -470,14 +479,14 @@ class P2PNetwork:
             logger.info(f"Obsługa lokalnego żądania typu: {message_type}")
 
             # Znajdź odpowiedni handler
-            handler = self.handlers.get(message_type)
-            if not handler:
+            handler_func = self.handlers.get(message_type)
+            if not handler_func:
                 logger.error(f"Nieznany typ wiadomości: {message_type}")
                 return None
 
             # Wywołaj handler
             try:
-                result = await handler(data)
+                result = await handler_func(data)
                 return result
             except Exception as e:
                 logger.error(f"Błąd podczas obsługi lokalnej wiadomości: {e}")
@@ -662,6 +671,180 @@ class P2PNetwork:
                 f"Błąd podczas pobierania pliku z {peer_info['hostname']}: {e}"
             )
             return False
+
+    # Handlery dla operacji VM
+    async def _handle_vm_list(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie listy maszyn wirtualnych"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Pobierz listę maszyn wirtualnych
+            vms = vm_runtime.list_vms()
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "vms": vms}
+        except Exception as e:
+            logger.error(f"Błąd podczas pobierania listy maszyn wirtualnych: {e}")
+            return {"status": "error", "message": str(e)}
+
+    async def _handle_vm_info(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie informacji o maszynie wirtualnej"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Sprawdź, czy podano nazwę maszyny
+            if "name" not in data:
+                return {
+                    "status": "error",
+                    "message": "Nie podano nazwy maszyny wirtualnej",
+                }
+
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Pobierz informacje o maszynie
+            vm_info = vm_runtime.get_vm_info(data["name"])
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "vm": vm_info}
+        except Exception as e:
+            logger.error(
+                f"Błąd podczas pobierania informacji o maszynie wirtualnej: {e}"
+            )
+            return {"status": "error", "message": str(e)}
+
+    async def _handle_vm_create(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie utworzenia maszyny wirtualnej"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Sprawdź, czy podano wymagane parametry
+            if "name" not in data:
+                return {
+                    "status": "error",
+                    "message": "Nie podano nazwy maszyny wirtualnej",
+                }
+
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Utwórz maszynę wirtualną
+            result = vm_runtime.create_vm(
+                name=data["name"],
+                memory=data.get("memory", 1024),
+                vcpus=data.get("vcpus", 1),
+                disk_size=data.get("disk_size", 10),
+                image=data.get("image", "default"),
+                networks=data.get("networks", []),
+                autostart=data.get("autostart", False),
+            )
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "result": result}
+        except Exception as e:
+            logger.error(f"Błąd podczas tworzenia maszyny wirtualnej: {e}")
+            return {"status": "error", "message": str(e)}
+
+    async def _handle_vm_start(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie uruchomienia maszyny wirtualnej"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Sprawdź, czy podano nazwę maszyny
+            if "name" not in data:
+                return {
+                    "status": "error",
+                    "message": "Nie podano nazwy maszyny wirtualnej",
+                }
+
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Uruchom maszynę wirtualną
+            result = vm_runtime.start_vm(data["name"])
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "result": result}
+        except Exception as e:
+            logger.error(f"Błąd podczas uruchamiania maszyny wirtualnej: {e}")
+            return {"status": "error", "message": str(e)}
+
+    async def _handle_vm_stop(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie zatrzymania maszyny wirtualnej"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Sprawdź, czy podano nazwę maszyny
+            if "name" not in data:
+                return {
+                    "status": "error",
+                    "message": "Nie podano nazwy maszyny wirtualnej",
+                }
+
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Zatrzymaj maszynę wirtualną
+            result = vm_runtime.stop_vm(data["name"], force=data.get("force", False))
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "result": result}
+        except Exception as e:
+            logger.error(f"Błąd podczas zatrzymywania maszyny wirtualnej: {e}")
+            return {"status": "error", "message": str(e)}
+
+    async def _handle_vm_delete(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie usunięcia maszyny wirtualnej"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Sprawdź, czy podano nazwę maszyny
+            if "name" not in data:
+                return {
+                    "status": "error",
+                    "message": "Nie podano nazwy maszyny wirtualnej",
+                }
+
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Usuń maszynę wirtualną
+            result = vm_runtime.delete_vm(
+                data["name"], delete_disk=data.get("delete_disk", True)
+            )
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "result": result}
+        except Exception as e:
+            logger.error(f"Błąd podczas usuwania maszyny wirtualnej: {e}")
+            return {"status": "error", "message": str(e)}
+
+    async def _handle_vm_status(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Obsługuje żądanie statusu maszyny wirtualnej"""
+        from ..runtime.vm import VMRuntime
+
+        try:
+            # Sprawdź, czy podano nazwę maszyny
+            if "name" not in data:
+                return {
+                    "status": "error",
+                    "message": "Nie podano nazwy maszyny wirtualnej",
+                }
+
+            # Utwórz instancję VMRuntime
+            vm_runtime = VMRuntime()
+
+            # Pobierz status maszyny
+            vm_status = vm_runtime.get_vm_status(data["name"])
+
+            # Przygotuj odpowiedź
+            return {"status": "ok", "vm_status": vm_status}
+        except Exception as e:
+            logger.error(f"Błąd podczas pobierania statusu maszyny wirtualnej: {e}")
+            return {"status": "error", "message": str(e)}
 
 
 # Inicjalizuj moduł
