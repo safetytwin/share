@@ -143,9 +143,24 @@ class P2PDiscovery:
         ]
 
     def get_peer(self, peer_id: str) -> Optional[Dict[str, Any]]:
-        """Zwraca informacje o konkretnym węźle"""
+        """
+        Zwraca informacje o konkretnym węźle.
+
+        Args:
+            peer_id: Identyfikator węzła, nazwa hosta lub adres IP
+
+        Returns:
+            Optional[Dict[str, Any]]: Informacje o węźle lub None jeśli nie znaleziono
+        """
+        # Najpierw sprawdź, czy mamy węzeł o podanym ID
         if peer_id in self.peers:
             return self.peers[peer_id].to_dict()
+
+        # Jeśli nie znaleziono po ID, spróbuj znaleźć po nazwie hosta lub adresie IP
+        for peer in self.peers.values():
+            if peer.hostname == peer_id or peer.ip == peer_id:
+                return peer.to_dict()
+
         return None
 
     def update_environments(self, environments: List[Dict[str, Any]]) -> None:

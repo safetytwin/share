@@ -34,7 +34,23 @@ The API uses standard HTTP methods and returns JSON responses. All API endpoints
 
 ### Starting the REST API Server
 
-The REST API server can be started using the provided script:
+The REST API server can be started using the twinshare CLI command:
+
+```bash
+# Start the server in the foreground
+twinshare api start --host 0.0.0.0 --port 8000
+
+# Start the server as a daemon (background process)
+twinshare api start --daemon --log-file /path/to/custom/logfile.log
+
+# Check the status of the server
+twinshare api status
+
+# Stop the running server
+twinshare api stop
+```
+
+You can also start the server using the provided script (legacy method):
 
 ```bash
 # Start the server in the foreground

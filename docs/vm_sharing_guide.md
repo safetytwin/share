@@ -99,6 +99,7 @@ curl -X DELETE http://localhost:37780/shared/my_workspace
 ```bash
 # Share a workspace
 twinshare workspace share --name my_workspace
+twinshare workspace share --name test-vm
 
 # Unshare a workspace
 twinshare workspace unshare --name my_workspace

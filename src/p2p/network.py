@@ -437,6 +437,53 @@ class P2PNetwork:
         Returns:
             Optional[Dict[str, Any]]: Odpowiedź lub None w przypadku błędu
         """
+        # Obsługa specjalnych przypadków dla połączeń lokalnych
+        local_identifiers = ["localhost", "127.0.0.1"]
+        local_hostname = socket.gethostname()
+
+        # Pobierz lokalne adresy IP
+        local_ips = []
+        try:
+            for interface in socket.getaddrinfo(local_hostname, None):
+                if interface[4][0] not in local_ips and not interface[4][0].startswith(
+                    "127."
+                ):
+                    local_ips.append(interface[4][0])
+        except:
+            pass
+
+        # Dodaj adres IP z konfiguracji
+        local_ip = config.get("p2p.node.ip")
+        if local_ip and local_ip not in local_ips:
+            local_ips.append(local_ip)
+
+        # Sprawdź, czy peer_id jest lokalnym identyfikatorem
+        is_local = (
+            peer_id in local_identifiers
+            or peer_id == local_hostname
+            or peer_id in local_ips
+            or peer_id == self.discovery.peer_id
+        )
+
+        if is_local:
+            # Użyj lokalnego handlera do obsługi wiadomości
+            logger.info(f"Obsługa lokalnego żądania typu: {message_type}")
+
+            # Znajdź odpowiedni handler
+            handler = self.handlers.get(message_type)
+            if not handler:
+                logger.error(f"Nieznany typ wiadomości: {message_type}")
+                return None
+
+            # Wywołaj handler
+            try:
+                result = await handler(data)
+                return result
+            except Exception as e:
+                logger.error(f"Błąd podczas obsługi lokalnej wiadomości: {e}")
+                return None
+
+        # Standardowa obsługa dla zdalnych węzłów
         # Pobierz informacje o węźle
         peer_info = self.discovery.get_peer(peer_id)
         if not peer_info:

@@ -50,6 +50,12 @@ twinshare vm list
 # Zarządzanie siecią P2P
 twinshare p2p discover
 
+# Zarządzanie serwerem REST API
+twinshare api start --host 0.0.0.0 --port 8000  # Uruchamia serwer REST API
+twinshare api start --daemon                    # Uruchamia serwer w tle
+twinshare api status                            # Sprawdza status serwera
+twinshare api stop                              # Zatrzymuje serwer REST API
+
 # Zarządzanie przestrzeniami roboczymi
 twinshare workspace list
 ```
