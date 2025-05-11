@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Twinshare CLI entry point script.
+This script is installed as a command-line tool when the package is installed.
+"""
+
+import os
+import sys
+
+# Add the parent directory to the Python path to ensure the package is found
+package_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, package_dir)
+
+# Import and run the main function from the CLI module
+from src.cli.main import main
+
+if __name__ == "__main__":
+    sys.exit(main())
