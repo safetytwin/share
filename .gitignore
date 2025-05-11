@@ -3,7 +3,9 @@
 .py.bak
 .terraform
 .terraform.lock.hcl
+terraform.tfstate
 terraform.tfstate.backup
+
 .lock.hcl
 .toml.bak
 # Byte-compiled / optimized / DLL files
